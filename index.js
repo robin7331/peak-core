@@ -4,7 +4,6 @@ var config = require('./config');
 var helpers = require('./lib/helpers');
 var Logger = require('./lib/logger');
 var PrivateHelpers = require('./lib/private-helpers');
-// var Vue = require('vue');
 
 // private vars
 var publishedJSFunctions = {};
