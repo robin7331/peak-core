@@ -59,6 +59,7 @@ var Core = function PeakCore(nativeMethods, JSMethods) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(JSMethods);
 
+	// initialize the property that holds installed peak modules.
 	this.modules = {};
 
 }
@@ -206,7 +207,6 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
  * @param  {any} jsonData     Payload of the callback.
  */
 Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
-	//Check if the function is available
 
 	if (this.config.debug) {
 		this.info("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
@@ -260,7 +260,7 @@ Core.prototype.callNative = function(functionName, payload, callback) {
 
 	if (callback !== undefined) {
 		//Generate temporary key for callback function
-		var callbackKey = _generateId();
+		var callbackKey = privateHelpers.generateId();
 		nativeCallbackFunctions[callbackKey] = {
 			callerFunctionName: functionName,
 			callbackFunction: function(data) {
@@ -301,6 +301,7 @@ Core.prototype.publishFunction = function(functionName, func){
  */
 Core.prototype.install = function (Vue, options) {
 	Vue.prototype.peak = this;
+	window.peak = this;
 }
 
 
