@@ -1,11 +1,11 @@
 {
   "name": "@bitmechanics/peak-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "example" : "node ./examples/normal-usage.js"
+    "example": "node ./examples/normal-usage.js"
   },
   "repository": {
     "type": "git",
