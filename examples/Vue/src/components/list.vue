@@ -33,9 +33,9 @@ $primary-color: #FFF;
 var ListItem = require('./list-item.vue');
 var TAG = "List-Component"
 
-// var PKCore = require('../../../../index');
+// var PeakCore = require('../../../../index');
 // var nativeMethods = require('../config/method-definitions');
-// var core = new PKCore(nativeMethods.native);
+// var core = new PeakCore(nativeMethods.native);
 
 module.exports = {
 
@@ -75,22 +75,8 @@ module.exports = {
 
 		clicked: function(item) {
 
-			// Vue.$callAsync('getPosition', 13.3, function(data) {
-			// 	Vue.$log(data, TAG);
-			// });
-
-			// core.logger.info("Hello World", TAG);
-			// this.$PKCore.callNative('setNavigationBarTitle', item.name);
-
-
-			this.peak.callNative('setNavigationBarTitle', item.name);
-			this.peak.info("WTF", "list item");
-
-
-			// core.callNative('setNavigationBarTitle', item.name);
-
-			// this.core.callNative('setNavigationBarTitle', item.name);
-			// core.callNative('setNavigationBarTitle', item.name);
+			var basicEvents = this.peak.modules.peakBasicEvents;
+			basicEvents.testMethod("OMFG!");
 
 
 		}

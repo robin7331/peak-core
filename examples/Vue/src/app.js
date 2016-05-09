@@ -10,6 +10,10 @@ var core = new PeakCore(nativeMethods.native);
 core.config.debug = DEBUG;
 Vue.use(core);
 
+var PeakModule = require('../../PeakModule');
+var peakModule = core.installPeakModule(PeakModule, Vue);
+
+
 var vueTouch = require('vue-touch');
 var options = {};
 Vue.use(vueTouch, options);

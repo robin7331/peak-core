@@ -30,7 +30,7 @@ config.JSMethods = require('./config/supported-js-methods');
 
 module.exports = config;
 
-},{"./config/supported-js-methods":2,"./config/supported-native-methods":3,"./package.json":19}],2:[function(require,module,exports){
+},{"./config/supported-js-methods":2,"./config/supported-native-methods":3,"./package.json":21}],2:[function(require,module,exports){
 module.exports = [
 	{
 		name: 'enableDebug',	//Mandatory (unchecked)
@@ -59,6 +59,50 @@ module.exports = [
 ]
 
 },{}],4:[function(require,module,exports){
+
+
+
+var BasicEvents = function PeakBasicEvents(nativeMethods, JSMethods) {
+   this.packageJSON = require('./package.json');
+   this.nativeMethods = [];
+   this.JSMethods = [];
+   this.installAsVuePlugin = false;
+}
+
+BasicEvents.prototype.testMethod = function(msg) {
+   this.info(msg);
+}
+
+BasicEvents.prototype.install = function(Vue, options) {
+
+   var that = this; // that == PeakBasicEvents
+
+   Vue.globalMethodTest = function(msg) {
+      that.info(msg);
+   };
+
+   Vue.prototype.$instanceMethodTest = function(msg) {
+      that.info(msg);
+   }
+
+}
+
+
+module.exports = BasicEvents;
+
+},{"./package.json":5}],5:[function(require,module,exports){
+module.exports={
+  "name": "peak-basic-events",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robin Reiter & Matthias Hermann"
+}
+
+},{}],6:[function(require,module,exports){
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
  *
@@ -2703,7 +2747,7 @@ if (typeof define === 'function' && define.amd) {
 
 })(window, document, 'Hammer');
 
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.3
  * http://jquery.com/
@@ -12547,7 +12591,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -12643,7 +12687,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var Vue // late bind
 var map = Object.create(null)
 var shimmed = false
@@ -12943,7 +12987,7 @@ function format (id) {
   return id.match(/[^\/]+\.vue$/)[0]
 }
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 ;(function () {
 
   var vueTouch = {}
@@ -13056,7 +13100,7 @@ function format (id) {
   }
 
 })()
-},{"hammerjs":4}],9:[function(require,module,exports){
+},{"hammerjs":6}],11:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.22
@@ -23080,7 +23124,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":6}],10:[function(require,module,exports){
+},{"_process":8}],12:[function(require,module,exports){
 var inserted = exports.cache = {}
 
 exports.insert = function (css) {
@@ -23100,7 +23144,7 @@ exports.insert = function (css) {
   return elem
 }
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var DEBUG = true
 
 var Vue = require('vue');
@@ -23112,6 +23156,10 @@ var nativeMethods = require('./config/method-definitions');
 var core = new PeakCore(nativeMethods.native);
 core.config.debug = DEBUG;
 Vue.use(core);
+
+var PeakModule = require('../../PeakModule');
+var peakModule = core.installPeakModule(PeakModule, Vue);
+
 
 var vueTouch = require('vue-touch');
 var options = {};
@@ -23134,7 +23182,7 @@ MyAPP = new Vue({
 	}
 });
 
-},{"../../../index":15,"./components/list.vue":13,"./config/method-definitions":14,"jQuery":5,"vue":9,"vue-touch":8}],12:[function(require,module,exports){
+},{"../../../index":17,"../../PeakModule":4,"./components/list.vue":15,"./config/method-definitions":16,"jQuery":7,"vue":11,"vue-touch":10}],14:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("/* line 2, stdin */\n.list-item {\n  background-color: green;\n  min-height: 100px;\n  margin: 15px;\n  width: 100%; }\n")
 "use strict";
 
@@ -23170,16 +23218,16 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, module.exports.template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":7,"vueify-insert-css":10}],13:[function(require,module,exports){
+},{"vue":11,"vue-hot-reload-api":9,"vueify-insert-css":12}],15:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("/* line 4, stdin */\n.list .container {\n  margin: 0px auto;\n  width: 100%;\n  /* OLD - iOS 6-, Safari 3.1-6, BB7 */\n  display: -ms-flexbox;\n  /* TWEENER - IE 10 */\n  display: -webkit-flex;\n  /* NEW - Safari 6.1+. iOS 7.1+, BB10 */\n  display: flex;\n  /* NEW, Spec - Firefox, Chrome, Opera */\n  -webkit-flex-direction: column;\n  -ms-flex-direction: column;\n      flex-direction: column;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n  padding: 0 0;\n  background-color: #FFF; }\n")
 'use strict';
 
 var ListItem = require('./list-item.vue');
 var TAG = "List-Component";
 
-// var PKCore = require('../../../../index');
+// var PeakCore = require('../../../../index');
 // var nativeMethods = require('../config/method-definitions');
-// var core = new PKCore(nativeMethods.native);
+// var core = new PeakCore(nativeMethods.native);
 
 module.exports = {
 
@@ -23210,20 +23258,8 @@ module.exports = {
 
 		clicked: function clicked(item) {
 
-			// Vue.$callAsync('getPosition', 13.3, function(data) {
-			// 	Vue.$log(data, TAG);
-			// });
-
-			// core.logger.info("Hello World", TAG);
-			// this.$PKCore.callNative('setNavigationBarTitle', item.name);
-
-			this.peak.callNative('setNavigationBarTitle', item.name);
-			this.peak.info("WTF", "list item");
-
-			// core.callNative('setNavigationBarTitle', item.name);
-
-			// this.core.callNative('setNavigationBarTitle', item.name);
-			// core.callNative('setNavigationBarTitle', item.name);
+			var basicEvents = this.peak.modules.peakBasicEvents;
+			basicEvents.testMethod("OMFG!");
 		}
 	}
 
@@ -23245,7 +23281,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, module.exports.template)
   }
 })()}
-},{"./list-item.vue":12,"vue":9,"vue-hot-reload-api":7,"vueify-insert-css":10}],14:[function(require,module,exports){
+},{"./list-item.vue":14,"vue":11,"vue-hot-reload-api":9,"vueify-insert-css":12}],16:[function(require,module,exports){
 module.exports = {
    native: [
       {
@@ -23255,7 +23291,7 @@ module.exports = {
    ]
 }
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 var config = require('./config');
@@ -23268,7 +23304,7 @@ var PrivateHelpers = require('./lib/private-helpers');
 var publishedJSFunctions = {};
 var nativeCallbackFunctions = {};
 var privateHelpers;
-var registeredModules = {};
+var installedModules = {};
 
 /**
  * The PeakCore class is used to communicate between a JS context and a native iOS or Android app.
@@ -23318,35 +23354,41 @@ var Core = function PeakCore(nativeMethods, JSMethods) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(JSMethods);
 
+	this.modules = {};
+
 }
 
 /**
  * Registeres a PeakModule with this PeakCore instance.
  * @param  {Object} ModuleClass The module class to be instantiated and registered
+ * @param  {Vue} Vue 			Vue Class to register the plugin. (optional, is defined in the modules package.json)
  * @return {Object}             An instance of the given module.
  */
-Core.prototype.registerPeakModule = function(ModuleClass) {
+Core.prototype.installPeakModule = function(ModuleClass, Vue) {
 
 	if (ModuleClass === undefined) {
-		this.error("Cannot register undefined PeakModule");
+		this.error("Cannot install undefined PeakModule");
 		return;
 	}
 
 	var module = new ModuleClass();
 
-	if (module.packageJS === undefined) {
-		this.error("Module has no packageJS property defined!");
+	if (module.packageJSON === undefined) {
+		this.error("Module has no packageJSON property defined!");
 		return;
 	}
 
-	var packageJS = module.packageJS;
+	var packageJSON = module.packageJSON;
 
 	// get the plain module name without "@bitmechanics/". F.ex. "peak-core" instead of "@bitmechanics/peak-core"
-	var moduleName = packageJS.name.replace("@bitmechanics/", "");
+	var moduleName = packageJSON.name.replace("@bitmechanics/", "");
 
-	if (moduleName in registeredModules) {
-		this.info("Module " + moduleName + " was registered already!");
-		return registeredModules[moduleName];
+	//convert came to camelCase.
+	var moduleNameCamelCase = privateHelpers.toCamelCase(moduleName);
+
+	if (moduleNameCamelCase in this.modules) {
+		this.info("Module " + moduleName + " was installed already!");
+		return this.modules[moduleNameCamelCase];
 	}
 
 	if (module.nativeMethods === undefined) {
@@ -23369,10 +23411,25 @@ Core.prototype.registerPeakModule = function(ModuleClass) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(module.nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(module.JSMethods);
 
-	this.info("Module " + moduleName + " with version " + packageJS.version + " was registered");
+	var infoMsg = "Module " + moduleName + " with version " + packageJSON.version + " was installed";
+	var installAsPlugin = !(module.installAsVuePlugin === undefined || module.installAsVuePlugin == false);
+	if (installAsPlugin) {
+		if (module.install === undefined) {
+			this.error("Module " + moduleName + " should be registered as Vue Plugin but has no install method.")
+		} else {
 
-	registeredModules[moduleName] = module;
+			if (Vue === undefined) {
+				this.error("Module " + moduleName + " should be registered as Vue Plugin but Vue is undefined.")
+			} else {
+				Vue.use(module);
+				infoMsg = infoMsg + " and registered as Vue Plugin";
+			}
+		}
+	}
 
+	this.info(infoMsg);
+
+	this.modules[moduleNameCamelCase] = module
 	return module;
 }
 
@@ -23546,7 +23603,7 @@ Core.prototype.install = function (Vue, options) {
 // Export the PeakCore class
 module.exports = Core;
 
-},{"./config":1,"./lib/helpers":16,"./lib/logger":17,"./lib/private-helpers":18}],16:[function(require,module,exports){
+},{"./config":1,"./lib/helpers":18,"./lib/logger":19,"./lib/private-helpers":20}],18:[function(require,module,exports){
 
 var helpers = {};
 module.exports = helpers;
@@ -23571,7 +23628,7 @@ helpers.isiOS = function(){
   		return !helpers.isAndroid();
 };
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 
 /**
  * Logger class acts as proxy to deliver console.logs to the native side. (They than show up in the native console instead of just in the JS console)
@@ -23589,8 +23646,6 @@ var logger = function Logger(core, privateHelpers) {
    this.core = core;
    this.config = core.config;
    this.privateHelpers = privateHelpers;
-
-   console.log("private helpers: " + this.privateHelpers);
 }
 
 /**
@@ -23635,11 +23690,11 @@ logger.prototype.error = function(message, customTag) {
 
 module.exports = logger;
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 
 /**
- * A collection of private helpers to operate PKCore.
- * @param {PKCore} core        A PKCore instance
+ * A collection of private helpers to operate PeakCore.
+ * @param {PeakCore} core        A PeakCore instance
  * @param {object} privateData Data that some private helpers need.
  */
 var Helpers = function PrivateHelpers(core, privateData) {
@@ -23849,12 +23904,25 @@ Helpers.prototype.generateId = function() {
 };
 
 
+/**
+ * Converts any string into camelCase.
+ * @param {string} str String to convert to camelCase.
+ * @return {string} Converted String
+ */
+Helpers.prototype.toCamelCase = function(str) {
+    return str.replace(/^([A-Z])|[\s-_](\w)/g, function(match, p1, p2, offset) {
+        if (p2) return p2.toUpperCase();
+        return p1.toLowerCase();
+    });
+};
+
+
 module.exports = Helpers;
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports={
   "name": "@bitmechanics/peak-core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
   "main": "index.js",
   "scripts": {
@@ -23868,4 +23936,4 @@ module.exports={
   "author": "Robin Reiter & Matthias Hermann"
 }
 
-},{}]},{},[11]);
+},{}]},{},[13]);
