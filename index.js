@@ -10,7 +10,7 @@ var PrivateHelpers = require('./lib/private-helpers');
 var publishedJSFunctions = {};
 var nativeCallbackFunctions = {};
 var privateHelpers;
-var registeredModules = {};
+var installedModules = {};
 
 /**
  * The PeakCore class is used to communicate between a JS context and a native iOS or Android app.
@@ -60,14 +60,17 @@ var Core = function PeakCore(nativeMethods, JSMethods) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(JSMethods);
 
+	this.modules = {};
+
 }
 
 /**
  * Registeres a PeakModule with this PeakCore instance.
  * @param  {Object} ModuleClass The module class to be instantiated and registered
+ * @param  {Vue} Vue 			Vue Class to register the plugin. (optional, is defined in the modules package.json)
  * @return {Object}             An instance of the given module.
  */
-Core.prototype.installPeakModule = function(ModuleClass) {
+Core.prototype.installPeakModule = function(ModuleClass, Vue) {
 
 	if (ModuleClass === undefined) {
 		this.error("Cannot install undefined PeakModule");
@@ -76,19 +79,22 @@ Core.prototype.installPeakModule = function(ModuleClass) {
 
 	var module = new ModuleClass();
 
-	if (module.packageJS === undefined) {
-		this.error("Module has no packageJS property defined!");
+	if (module.packageJSON === undefined) {
+		this.error("Module has no packageJSON property defined!");
 		return;
 	}
 
-	var packageJS = module.packageJS;
+	var packageJSON = module.packageJSON;
 
 	// get the plain module name without "@bitmechanics/". F.ex. "peak-core" instead of "@bitmechanics/peak-core"
-	var moduleName = packageJS.name.replace("@bitmechanics/", "");
+	var moduleName = packageJSON.name.replace("@bitmechanics/", "");
 
-	if (moduleName in registeredModules) {
+	//convert came to camelCase.
+	var moduleNameCamelCase = privateHelpers.toCamelCase(moduleName);
+
+	if (moduleNameCamelCase in this.modules) {
 		this.info("Module " + moduleName + " was installed already!");
-		return registeredModules[moduleName];
+		return this.modules[moduleNameCamelCase];
 	}
 
 	if (module.nativeMethods === undefined) {
@@ -111,23 +117,26 @@ Core.prototype.installPeakModule = function(ModuleClass) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(module.nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(module.JSMethods);
 
-	this.info("Module " + moduleName + " with version " + packageJS.version + " was installed!");
+	var infoMsg = "Module " + moduleName + " with version " + packageJSON.version + " was installed";
+	var installAsPlugin = !(module.installAsVuePlugin === undefined || module.installAsVuePlugin == false);
+	if (installAsPlugin) {
+		if (module.install === undefined) {
+			this.error("Module " + moduleName + " should be registered as Vue Plugin but has no install method.")
+		} else {
 
-	registeredModules[moduleName] = module;
-
-	return module;
-}
-
-/**
- * Returns a installed PeakModule for a given name.
- * @param  {string} name The module name (as defined in it's package.json)
- * @return {Object}      The PeakModule or undefined if not found
- */
-Core.prototype.getPeakModule = function(name) {
-	if (name in registeredModules) {
-		return registeredModules[name];
+			if (Vue === undefined) {
+				this.error("Module " + moduleName + " should be registered as Vue Plugin but Vue is undefined.")
+			} else {
+				Vue.use(module);
+				infoMsg = infoMsg + " and registered as Vue Plugin";
+			}
+		}
 	}
-	return undefined;
+
+	this.info(infoMsg);
+
+	this.modules[moduleNameCamelCase] = module
+	return module;
 }
 
 /**
