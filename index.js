@@ -67,10 +67,10 @@ var Core = function PeakCore(nativeMethods, JSMethods) {
  * @param  {Object} ModuleClass The module class to be instantiated and registered
  * @return {Object}             An instance of the given module.
  */
-Core.prototype.registerPeakModule = function(ModuleClass) {
+Core.prototype.installPeakModule = function(ModuleClass) {
 
 	if (ModuleClass === undefined) {
-		this.error("Cannot register undefined PeakModule");
+		this.error("Cannot install undefined PeakModule");
 		return;
 	}
 
@@ -87,7 +87,7 @@ Core.prototype.registerPeakModule = function(ModuleClass) {
 	var moduleName = packageJS.name.replace("@bitmechanics/", "");
 
 	if (moduleName in registeredModules) {
-		this.info("Module " + moduleName + " was registered already!");
+		this.info("Module " + moduleName + " was installed already!");
 		return registeredModules[moduleName];
 	}
 
@@ -111,11 +111,23 @@ Core.prototype.registerPeakModule = function(ModuleClass) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(module.nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(module.JSMethods);
 
-	this.info("Module " + moduleName + " with version " + packageJS.version + " was registered");
+	this.info("Module " + moduleName + " with version " + packageJS.version + " was installed!");
 
 	registeredModules[moduleName] = module;
 
 	return module;
+}
+
+/**
+ * Returns a installed PeakModule for a given name.
+ * @param  {string} name The module name (as defined in it's package.json)
+ * @return {Object}      The PeakModule or undefined if not found
+ */
+Core.prototype.getPeakModule = function(name) {
+	if (name in registeredModules) {
+		return registeredModules[name];
+	}
+	return undefined;
 }
 
 /**
