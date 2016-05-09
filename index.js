@@ -1,8 +1,10 @@
+"use strict";
 
 var config = require('./config');
 var helpers = require('./lib/helpers');
 var Logger = require('./lib/logger');
 var PrivateHelpers = require('./lib/private-helpers');
+// var Vue = require('vue');
 
 // private vars
 var publishedJSFunctions = {};
@@ -11,12 +13,12 @@ var privateHelpers;
 var registeredModules = {};
 
 /**
- * The PKCore class is used to communicate between a JS context and a native iOS or Android app.
+ * The PeakCore class is used to communicate between a JS context and a native iOS or Android app.
  * @param {array} nativeMethods Method definitions for all methods, that will be implemented on the native side.
  * @param {array} vueMethods    Method definitions for all methods, that will be implemented on the JS side.
- * @return {PKCore}      PKCore instance
+ * @return {PeakCore}      PeakCore instance
  */
-var Core = function PKCore(nativeMethods, JSMethods) {
+var Core = function PeakCore(nativeMethods, JSMethods) {
 
 	// initialize the private helpers
 	privateHelpers = new PrivateHelpers(this, {
@@ -42,57 +44,76 @@ var Core = function PKCore(nativeMethods, JSMethods) {
 	 */
 	this.logger = new Logger(this, privateHelpers);
 
-	// add given methods to the config object
+	/**
+	 * Convenient method to log an info message.
+	 * @type {Function}
+	 */
+	this.info = this.logger.info.bind(this.logger);
+
+	/**
+	 * Convenient method to log an error message.
+	 * @type {Function}
+	 */
+	this.error = this.logger.error.bind(this.logger);
+
+	// merge all methods given through the constructor with the builtin methods.
 	this.config.nativeMethods = this.config.nativeMethods.concat(nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(JSMethods);
 
 }
 
 /**
- * Registeres a PEAK Module with this PKCore instance.
+ * Registeres a PeakModule with this PeakCore instance.
  * @param  {Object} ModuleClass The module class to be instantiated and registered
  * @return {Object}             An instance of the given module.
  */
-Core.prototype.registerPKModule = function(ModuleClass) {
+Core.prototype.registerPeakModule = function(ModuleClass) {
 
-	if (module === undefined) {
-		this.logger.error("Cannot register undefined PEAK module");
+	if (ModuleClass === undefined) {
+		this.error("Cannot register undefined PeakModule");
 		return;
 	}
 
 	var module = new ModuleClass();
 
 	if (module.packageJS === undefined) {
-		this.logger.error("Module has no packageJS property defined!");
+		this.error("Module has no packageJS property defined!");
 		return;
 	}
 
 	var packageJS = module.packageJS;
-	var moduleName = packageJS.name;
+
+	// get the plain module name without "@bitmechanics/". F.ex. "peak-core" instead of "@bitmechanics/peak-core"
+	var moduleName = packageJS.name.replace("@bitmechanics/", "");
 
 	if (moduleName in registeredModules) {
-		this.logger.info("Module " + moduleName + " was registered already!");
+		this.info("Module " + moduleName + " was registered already!");
 		return registeredModules[moduleName];
 	}
 
 	if (module.nativeMethods === undefined) {
-		this.logger.error("Module " + moduleName + " has no nativeMethods property!");
+		this.error("Module " + moduleName + " has no nativeMethods property!");
 		return;
 	}
 
 	if (module.JSMethods === undefined) {
-		this.logger.error("Module " + moduleName + " has no JSMethods property!");
+		this.error("Module " + moduleName + " has no JSMethods property!");
 		return;
 	}
 
+	// populate module with basic functions
 	module.core = this;
 	module.logger = this.logger;
+	module.error = this.error;
+	module.info = this.info;
 
 	// add the module method definitions to the config object
 	this.config.nativeMethods = this.config.nativeMethods.concat(module.nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(module.JSMethods);
 
-	this.logger.info("Module " + moduleName + " with version " + packageJS.version + " was registered");
+	this.info("Module " + moduleName + " with version " + packageJS.version + " was registered");
+
+	registeredModules[moduleName] = module;
 
 	return module;
 }
@@ -106,7 +127,7 @@ Core.prototype.registerPKModule = function(ModuleClass) {
 Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 
 	if (this.config.debug) {
-		this.logger.info("JS function " + functionName + " called.");
+		this.info("JS function " + functionName + " called.");
 		// that.$log("JS function " + functionName + " called.")
 	}
 
@@ -115,7 +136,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 
 	// is method defined in config?
 	if (JSMethodDefinition === undefined) {
-		this.logger.error(functionName + "() is not implemented in JavaScript Code!");
+		this.error(functionName + "() is not implemented in JavaScript Code!");
 		return;
 	}
 
@@ -126,7 +147,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 
 	// is nativeCallback valid? (callback function names for functions are defined in the config object)
 	if(this.helpers.isAndroid() && privateHelpers.isJSMethodNativeCallbackValid(JSMethodDefinition, nativeCallback) == false){
-		this.logger.error(functionName + "() wrong callback " + nativeCallback + "! Expected: " + JSMethodDefinition.callback.name);
+		this.error(functionName + "() wrong callback " + nativeCallback + "! Expected: " + JSMethodDefinition.callback.name);
 		return;
 	}
 
@@ -135,7 +156,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 		var callbackData = publishedJSFunctions[functionName](payload);
 
 		if (privateHelpers.isCallbackDataValidForMethodDefinition(JSMethodDefinition.callback, callbackData) == false) {
-			this.logger.error(functionName + "() callback data does not match definition!");
+			this.error(functionName + "() callback data does not match definition!");
 			return;
 		}
 
@@ -144,7 +165,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 				return callbackData;
 			} else {
 				if(this.config.debug){
-					this.logger.info("Native Callback " + nativeCallback +"() called. With data: " + JSON.stringify(callbackData,null,4));
+					this.info("Native Callback " + nativeCallback +"() called. With data: " + JSON.stringify(callbackData,null,4));
 				}
 
 				// execute the native call
@@ -155,7 +176,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 
 	}
 	else{
-		this.logger.error(functionName + "() is not implemented in JavaScript! (not published?)");
+		this.error(functionName + "() is not implemented in JavaScript! (not published?)");
 	}
 }
 
@@ -168,7 +189,7 @@ Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
 	//Check if the function is available
 
 	if (this.config.debug) {
-		this.logger.info("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
+		this.info("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
 	}
 
 	if (callbackFunctionName in nativeCallbackFunctions) {
@@ -179,14 +200,14 @@ Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
 		var method = privateHelpers.getNativeMethodDefinition(callerFunctionName);
 
 		if (privateHelpers.isCallbackDataValidForMethodDefinition(method, jsonData) == false) {
-			this.logger.error(callerFunctionName + "() callback data does not match definition!");
+			this.error(callerFunctionName + "() callback data does not match definition!");
 			return;
 		}
 
 		callbackFunction(jsonData);
 
 	} else {
-		this.logger.error(callbackFunctionName + "() callback not defined!");
+		this.error(callbackFunctionName + "() callback not defined!");
 	}
 };
 
@@ -199,7 +220,7 @@ Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
 Core.prototype.callNative = function(functionName, payload, callback) {
 
 	if (this.config.debug) {
-		this.logger.info("Native function " + functionName + "() called.");
+		this.info("Native function " + functionName + "() called.");
 	}
 
 	//Get native method definition
@@ -207,7 +228,7 @@ Core.prototype.callNative = function(functionName, payload, callback) {
 
 	// is method defined?
 	if (nativeMethodDefinition === undefined) {
-		this.logger.error(functionName + "() is not implemented in Native Code!");
+		this.error(functionName + "() is not implemented in Native Code!");
 		return;
 	}
 
@@ -235,7 +256,7 @@ Core.prototype.callNative = function(functionName, payload, callback) {
 
 
 /**
- * Publishes a custom JS function to the PKCore system.
+ * Publishes a custom JS function to the PeakCore system.
  * @param  {string} functionName The name of the function.
  * @param  {object} func         The function itself.
  */
@@ -244,19 +265,25 @@ Core.prototype.publishFunction = function(functionName, func){
 	var JSMethodDefinition = privateHelpers.getJSMethodDefinition(functionName);
 
 	if(JSMethodDefinition === undefined){
-		this.logger.error(functionName +"() is not declared in method definitions!")
+		this.error(functionName +"() is not declared in method definitions!")
 		return;
 	}
 
 	//Register a callable JS Function that simply broadcasts an event that has the same name as the function
 	publishedJSFunctions[functionName] = func;
 	if(this.config.debug){
-		this.logger.info(functionName + "() has been published!")
+		this.info(functionName + "() has been published!")
 	}
 };
 
+/**
+ * This is needed to use this class as a Vue plugin.
+ */
+Core.prototype.install = function (Vue, options) {
+	Vue.prototype.peak = this;
+}
 
 
-
-// Export the PKCore class
+//
+// Export the PeakCore class
 module.exports = Core;

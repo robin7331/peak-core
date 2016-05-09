@@ -33,18 +33,13 @@ $primary-color: #FFF;
 var ListItem = require('./list-item.vue');
 var TAG = "List-Component"
 
-
-var PKCore = require('../../../../index');
-var nativeMethods = require('../config/method-definitions');
-var core = new PKCore(nativeMethods.native);
+// var PKCore = require('../../../../index');
+// var nativeMethods = require('../config/method-definitions');
+// var core = new PKCore(nativeMethods.native);
 
 module.exports = {
 
 	ready: function() {
-		// Vue.$log("List ready.", TAG);
-		//
-		// Vue.$publishFunction("getUser",this.getUser);
-		// Vue.$publishFunction("addItem",this.addItem);
 
 	},
 
@@ -85,8 +80,17 @@ module.exports = {
 			// });
 
 			// core.logger.info("Hello World", TAG);
+			// this.$PKCore.callNative('setNavigationBarTitle', item.name);
 
-			core.callNative('setNavigationBarTitle', item.name);
+
+			this.peak.callNative('setNavigationBarTitle', item.name);
+			this.peak.info("WTF", "list item");
+
+
+			// core.callNative('setNavigationBarTitle', item.name);
+
+			// this.core.callNative('setNavigationBarTitle', item.name);
+			// core.callNative('setNavigationBarTitle', item.name);
 
 
 		}

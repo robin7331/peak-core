@@ -1,24 +1,22 @@
 var DEBUG = true
 
 var Vue = require('vue');
+Vue.config.devtools = DEBUG;
+Vue.config.debug = DEBUG;
 
-var PKCore = require('../../../index');
+var PeakCore = require('../../../index');
 var nativeMethods = require('./config/method-definitions');
-var core = new PKCore(nativeMethods.native);
-
-if(DEBUG) {
-	Vue.config.debug = true;
-	Vue.config.devtools = true;
-}
+var core = new PeakCore(nativeMethods.native);
+core.config.debug = DEBUG;
+Vue.use(core);
 
 var vueTouch = require('vue-touch');
 var options = {};
 Vue.use(vueTouch, options);
 
+
 var jQuery = require("jQuery");
 var List = require('./components/list.vue');
-
-// var TAG = "Vue-App"
 
 MyAPP = new Vue({
 	el: '#app',
@@ -29,6 +27,6 @@ MyAPP = new Vue({
 		'list' : List
 	},
 	ready: function() {
-		core.logger.info("Hello World from JavaScript!");
+		this.peak.info("Hello from Vue");
 	}
 });
