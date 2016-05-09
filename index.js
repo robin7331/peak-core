@@ -14,6 +14,7 @@ var registeredModules = {};
  * The PKCore class is used to communicate between a JS context and a native iOS or Android app.
  * @param {array} nativeMethods Method definitions for all methods, that will be implemented on the native side.
  * @param {array} vueMethods    Method definitions for all methods, that will be implemented on the JS side.
+ * @return {PKCore}      PKCore instance
  */
 var Core = function PKCore(nativeMethods, JSMethods) {
 
@@ -23,9 +24,22 @@ var Core = function PKCore(nativeMethods, JSMethods) {
 		nativeCallbackFunctions: nativeCallbackFunctions
 	});
 
-	// initialize config and helpers
+	/**
+	 * The configuration object
+	 * @type {object}
+	 */
 	this.config = config;
+
+	/**
+	 * Helpers object
+	 * @type {object}
+	 */
 	this.helpers = helpers;
+
+	/**
+	 * A Logger instance for logging messages to the native console
+	 * @type {Logger}
+	 */
 	this.logger = new Logger(this, privateHelpers);
 
 	// add given methods to the config object
@@ -34,6 +48,11 @@ var Core = function PKCore(nativeMethods, JSMethods) {
 
 }
 
+/**
+ * Registeres a PEAK Module with this PKCore instance.
+ * @param  {Object} ModuleClass The module class to be instantiated and registered
+ * @return {Object}             An instance of the given module.
+ */
 Core.prototype.registerPKModule = function(ModuleClass) {
 
 	if (module === undefined) {
@@ -52,7 +71,7 @@ Core.prototype.registerPKModule = function(ModuleClass) {
 	var moduleName = packageJS.name;
 
 	if (moduleName in registeredModules) {
-		this.logger.log("Module " + moduleName + " was registered already!");
+		this.logger.info("Module " + moduleName + " was registered already!");
 		return registeredModules[moduleName];
 	}
 
@@ -73,7 +92,7 @@ Core.prototype.registerPKModule = function(ModuleClass) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(module.nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(module.JSMethods);
 
-	this.logger.log("Module " + moduleName + " with version " + packageJS.version + " was registered");
+	this.logger.info("Module " + moduleName + " with version " + packageJS.version + " was registered");
 
 	return module;
 }
@@ -87,7 +106,7 @@ Core.prototype.registerPKModule = function(ModuleClass) {
 Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 
 	if (this.config.debug) {
-		this.logger.log("JS function " + functionName + " called.");
+		this.logger.info("JS function " + functionName + " called.");
 		// that.$log("JS function " + functionName + " called.")
 	}
 
@@ -125,7 +144,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 				return callbackData;
 			} else {
 				if(this.config.debug){
-					this.logger.log("Native Callback " + nativeCallback +"() called. With data: " + JSON.stringify(callbackData,null,4));
+					this.logger.info("Native Callback " + nativeCallback +"() called. With data: " + JSON.stringify(callbackData,null,4));
 				}
 
 				// execute the native call
@@ -149,7 +168,7 @@ Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
 	//Check if the function is available
 
 	if (this.config.debug) {
-		this.logger.log("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
+		this.logger.info("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
 	}
 
 	if (callbackFunctionName in nativeCallbackFunctions) {
@@ -180,7 +199,7 @@ Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
 Core.prototype.callNative = function(functionName, payload, callback) {
 
 	if (this.config.debug) {
-		this.logger.log("Native function " + functionName + "() called.");
+		this.logger.info("Native function " + functionName + "() called.");
 	}
 
 	//Get native method definition
@@ -232,7 +251,7 @@ Core.prototype.publishFunction = function(functionName, func){
 	//Register a callable JS Function that simply broadcasts an event that has the same name as the function
 	publishedJSFunctions[functionName] = func;
 	if(this.config.debug){
-		this.logger.log(functionName + "() has been published!")
+		this.logger.info(functionName + "() has been published!")
 	}
 };
 
