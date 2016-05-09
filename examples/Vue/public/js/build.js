@@ -23179,6 +23179,8 @@ MyAPP = new Vue({
 	},
 	ready: function() {
 		this.peak.info("Hello from Vue");
+
+		this.peak.callNative("logTest", "This is a fucking Log");
 	}
 });
 
@@ -23260,6 +23262,11 @@ module.exports = {
 
 			var basicEvents = this.peak.modules.peakBasicEvents;
 			basicEvents.testMethod("OMFG!");
+
+			var that = this;
+			this.peak.callNative("callbackTest", 123, function (payload) {
+				that.peak.info(payload);
+			});
 		}
 	}
 
@@ -23287,6 +23294,15 @@ module.exports = {
       {
       	name: 'setNavigationBarTitle',			//Mandatory (unchecked)
       	payloadType: 'string'
+      },
+      {
+      	name: 'logTest',			//Mandatory (unchecked)
+      	payloadType: 'string'
+      },
+      {
+         name: 'callbackTest',
+         payloadType: 'number',
+         callbackDataType: 'string'
       }
    ]
 }
@@ -23298,7 +23314,6 @@ var config = require('./config');
 var helpers = require('./lib/helpers');
 var Logger = require('./lib/logger');
 var PrivateHelpers = require('./lib/private-helpers');
-// var Vue = require('vue');
 
 // private vars
 var publishedJSFunctions = {};
@@ -23354,6 +23369,7 @@ var Core = function PeakCore(nativeMethods, JSMethods) {
 	this.config.nativeMethods = this.config.nativeMethods.concat(nativeMethods);
 	this.config.JSMethods = this.config.JSMethods.concat(JSMethods);
 
+	// initialize the property that holds installed peak modules.
 	this.modules = {};
 
 }
@@ -23502,6 +23518,8 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
  */
 Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
 	//Check if the function is available
+	//
+	this.info("cb");
 
 	if (this.config.debug) {
 		this.info("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
@@ -23555,7 +23573,7 @@ Core.prototype.callNative = function(functionName, payload, callback) {
 
 	if (callback !== undefined) {
 		//Generate temporary key for callback function
-		var callbackKey = _generateId();
+		var callbackKey = privateHelpers.generateId();
 		nativeCallbackFunctions[callbackKey] = {
 			callerFunctionName: functionName,
 			callbackFunction: function(data) {
@@ -23596,6 +23614,7 @@ Core.prototype.publishFunction = function(functionName, func){
  */
 Core.prototype.install = function (Vue, options) {
 	Vue.prototype.peak = this;
+	window.peak = this;
 }
 
 
@@ -23856,7 +23875,7 @@ Helpers.prototype.execNativeCall = function(nativeMethodDefinition, payload, cal
 			return;
 		}
 
-		window.webkit.messageHandlers.observe.postMessage({
+		window.webkit.messageHandlers.PeakCore.postMessage({
 			functionName: nativeMethodDefinition.name,
 			payload: payload,
 			callbackKey: callbackKey
@@ -23865,7 +23884,7 @@ Helpers.prototype.execNativeCall = function(nativeMethodDefinition, payload, cal
 	} else if (this.core.helpers.isAndroid()) {
 
 		if (typeof(AndroidNative) == 'undefined') {
-			this.core.logger.error(" No Android environment. Async call cancelled.");
+			this.core.logger.error(" No Android environment. execNativeCall cancelled.");
 			return;
 		}
 
@@ -23922,7 +23941,7 @@ module.exports = Helpers;
 },{}],21:[function(require,module,exports){
 module.exports={
   "name": "@bitmechanics/peak-core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
   "main": "index.js",
   "scripts": {

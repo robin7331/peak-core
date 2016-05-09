@@ -78,6 +78,11 @@ module.exports = {
 			var basicEvents = this.peak.modules.peakBasicEvents;
 			basicEvents.testMethod("OMFG!");
 
+			var that = this;
+			this.peak.callNative("callbackTest", 123, function(payload) {
+				that.peak.info(payload);
+			});
+
 
 		}
 	}

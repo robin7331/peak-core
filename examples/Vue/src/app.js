@@ -32,5 +32,7 @@ MyAPP = new Vue({
 	},
 	ready: function() {
 		this.peak.info("Hello from Vue");
+
+		this.peak.callNative("logTest", "This is a fucking Log");
 	}
 });

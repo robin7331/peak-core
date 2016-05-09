@@ -14,6 +14,7 @@
 		00F380A01CE0A025008145AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00F3809F1CE0A025008145AB /* Assets.xcassets */; };
 		00F380A31CE0A025008145AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00F380A11CE0A025008145AB /* LaunchScreen.storyboard */; };
 		00F380AC1CE0A072008145AB /* iOSNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F380AB1CE0A072008145AB /* iOSNative.m */; };
+		67A6993560B93FCAECD45FAC /* PeakCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 67A694FDA30303DDCF4DB387 /* PeakCore.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,8 @@
 		00F380A41CE0A025008145AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00F380AA1CE0A071008145AB /* iOSNative.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSNative.h; sourceTree = "<group>"; };
 		00F380AB1CE0A072008145AB /* iOSNative.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iOSNative.m; sourceTree = "<group>"; };
+		67A694FDA30303DDCF4DB387 /* PeakCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeakCore.m; sourceTree = "<group>"; };
+		67A6963EC85AAEB38B00CAEE /* PeakCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeakCore.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +75,8 @@
 				00F380931CE0A025008145AB /* Supporting Files */,
 				00F380AA1CE0A071008145AB /* iOSNative.h */,
 				00F380AB1CE0A072008145AB /* iOSNative.m */,
+				67A694FDA30303DDCF4DB387 /* PeakCore.m */,
+				67A6963EC85AAEB38B00CAEE /* PeakCore.h */,
 			);
 			path = "core-example";
 			sourceTree = "<group>";
@@ -158,6 +163,7 @@
 				00F3809B1CE0A025008145AB /* ViewController.m in Sources */,
 				00F380981CE0A025008145AB /* AppDelegate.m in Sources */,
 				00F380951CE0A025008145AB /* main.m in Sources */,
+				67A6993560B93FCAECD45FAC /* PeakCore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
