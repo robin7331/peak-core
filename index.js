@@ -111,7 +111,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 		return;
 	}
 
-	//Check if the function is available
+	//Check if this function was published
 	if (functionName in publishedJSFunctions){
 		var callbackData = publishedJSFunctions[functionName](payload);
 
@@ -128,6 +128,7 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
 					this.logger.log("Native Callback " + nativeCallback +"() called. With data: " + JSON.stringify(callbackData,null,4));
 				}
 
+				// execute the native call
 				privateHelpers.execNativeCall(core, JSMethodDefinition.callback, callbackData);
 			}
 

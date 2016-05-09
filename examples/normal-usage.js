@@ -16,12 +16,3 @@ Core.publishFunction("logMe", function(msg) {
 });
 
 Core.callJS("logMe", "test 123");
-
-// Core.config.debug = false;
-
-
-
-// PKBridge.helpers.isAndroid();
-
-
-// PKBridge.getNativeMethodDefinition();
