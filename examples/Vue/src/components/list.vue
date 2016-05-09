@@ -16,7 +16,7 @@ $primary-color: #FFF;
 		padding: 0 0;
 		background-color: $primary-color;
 	}
-	
+
 }
 </style>
 
@@ -33,30 +33,35 @@ $primary-color: #FFF;
 var ListItem = require('./list-item.vue');
 var TAG = "List-Component"
 
+
+var PKCore = require('../../../../index');
+var nativeMethods = require('../config/method-definitions');
+var core = new PKCore(nativeMethods.native);
+
 module.exports = {
 
 	ready: function() {
-		Vue.$log("List ready.", TAG);
-
-		Vue.$publishFunction("getUser",this.getUser);
-		Vue.$publishFunction("addItem",this.addItem);
+		// Vue.$log("List ready.", TAG);
+		//
+		// Vue.$publishFunction("getUser",this.getUser);
+		// Vue.$publishFunction("addItem",this.addItem);
 
 	},
 
 	components: {
-		'list-item' : ListItem 
+		'list-item' : ListItem
 	},
 
 	data: function() {
 		return {
-			items : [			
+			items : [
 				{name: "Hello 1"},
 				{name: "Hello 2"},
 				{name: "Hello 3"},
 				{name: "Hello 4"}
 			]
-		};		
-	}, 
+		};
+	},
 
 	methods: {
 
@@ -74,10 +79,15 @@ module.exports = {
 
 
 		clicked: function(item) {
-		
-			Vue.$callAsync('getPosition', 13.3, function(data) {
-				Vue.$log(data, TAG);
-			});
+
+			// Vue.$callAsync('getPosition', 13.3, function(data) {
+			// 	Vue.$log(data, TAG);
+			// });
+
+			// core.logger.info("Hello World", TAG);
+
+			core.callNative('setNavigationBarTitle', item.name);
+
 
 		}
 	}

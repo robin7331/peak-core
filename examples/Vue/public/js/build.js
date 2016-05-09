@@ -1,4 +1,64 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var pjson = require('./package.json');
+
+var config = {};
+
+/**
+ * Defines if the debugging mode is turned on
+ * @type {Boolean}
+ */
+config.debug = true;
+
+/**
+ * Used as prefix for console outputs.
+ * @param {String}
+ */
+config.consoleTag = "PEAK Core (" + pjson.version + ")";
+
+/**
+ * Method definitions for native methods.
+ * @param  {array} An array of method definitions.
+ */
+config.nativeMethods = require('./config/supported-native-methods');
+
+/**
+ * Method definitions for JS methods.
+ * @param  {array} An array of method definitions.
+ */
+config.JSMethods = require('./config/supported-js-methods');
+
+
+module.exports = config;
+
+},{"./config/supported-js-methods":2,"./config/supported-native-methods":3,"./package.json":19}],2:[function(require,module,exports){
+module.exports = [
+	{
+		name: 'enableDebug',	//Mandatory (unchecked)
+		payloadType: 'boolean'
+	}
+]
+
+},{}],3:[function(require,module,exports){
+module.exports = [
+   {
+   	name: 'log',			//Mandatory (unchecked)
+   	payloadType: 'string'
+   },
+   {
+   	name: 'logError',		//Mandatory (unchecked)
+   	payloadType: 'string'
+   },
+   {
+   	name: 'onWindowLoad',	//Mandatory (unchecked)
+   	payloadType: 'none'
+   },
+   {
+   	name: 'onVueReady',		//Mandatory (unchecked)
+   	payloadType: 'none'
+   }
+]
+
+},{}],4:[function(require,module,exports){
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
  *
@@ -2643,7 +2703,7 @@ if (typeof define === 'function' && define.amd) {
 
 })(window, document, 'Hammer');
 
-},{}],2:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.3
  * http://jquery.com/
@@ -12487,7 +12547,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],3:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -12583,7 +12643,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],4:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var Vue // late bind
 var map = Object.create(null)
 var shimmed = false
@@ -12883,7 +12943,7 @@ function format (id) {
   return id.match(/[^\/]+\.vue$/)[0]
 }
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 ;(function () {
 
   var vueTouch = {}
@@ -12996,7 +13056,7 @@ function format (id) {
   }
 
 })()
-},{"hammerjs":1}],6:[function(require,module,exports){
+},{"hammerjs":4}],9:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.22
@@ -23020,7 +23080,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":3}],7:[function(require,module,exports){
+},{"_process":6}],10:[function(require,module,exports){
 var inserted = exports.cache = {}
 
 exports.insert = function (css) {
@@ -23040,17 +23100,19 @@ exports.insert = function (css) {
   return elem
 }
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var DEBUG = true
+
 var Vue = require('vue');
+
+var PKCore = require('../../../index');
+var nativeMethods = require('./config/method-definitions');
+var core = new PKCore(nativeMethods.native);
+
 if(DEBUG) {
 	Vue.config.debug = true;
-	Vue.config.devtools = false;
+	Vue.config.devtools = true;
 }
-
-// var methods = require('./vue-native-interface-methods.js');
-// var NativeInterface = require('./vue/vue-native-interface.js');
-// Vue.use(NativeInterface,{methods: methods, debug: DEBUG});
 
 var vueTouch = require('vue-touch');
 var options = {};
@@ -23070,17 +23132,11 @@ MyAPP = new Vue({
 		'list' : List
 	},
 	ready: function() {
-		//  Vue.$vueReady(TAG);
-		//this.$call("test");
-
-		//console.log("isAndroid: " + this.$isAndroid());
-		//console.log("isiOS: " + this.$isiOS());
-
-		//console.log("user agent: " + navigator.userAgent);
+		core.logger.info("Hello World from JavaScript!");
 	}
 });
 
-},{"./components/list.vue":10,"jQuery":2,"vue":6,"vue-touch":5}],9:[function(require,module,exports){
+},{"../../../index":15,"./components/list.vue":13,"./config/method-definitions":14,"jQuery":5,"vue":9,"vue-touch":8}],12:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("/* line 2, stdin */\n.list-item {\n  background-color: green;\n  min-height: 100px;\n  margin: 15px;\n  width: 100%; }\n")
 "use strict";
 
@@ -23116,20 +23172,25 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, module.exports.template)
   }
 })()}
-},{"vue":6,"vue-hot-reload-api":4,"vueify-insert-css":7}],10:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":7,"vueify-insert-css":10}],13:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("/* line 4, stdin */\n.list .container {\n  margin: 0px auto;\n  width: 100%;\n  /* OLD - iOS 6-, Safari 3.1-6, BB7 */\n  display: -ms-flexbox;\n  /* TWEENER - IE 10 */\n  display: -webkit-flex;\n  /* NEW - Safari 6.1+. iOS 7.1+, BB10 */\n  display: flex;\n  /* NEW, Spec - Firefox, Chrome, Opera */\n  -webkit-flex-direction: column;\n  -ms-flex-direction: column;\n      flex-direction: column;\n  -webkit-align-items: center;\n      -ms-flex-align: center;\n          align-items: center;\n  padding: 0 0;\n  background-color: #FFF; }\n")
-"use strict";
+'use strict';
 
 var ListItem = require('./list-item.vue');
 var TAG = "List-Component";
 
+var PKCore = require('../../../../index');
+var nativeMethods = require('../config/method-definitions');
+var core = new PKCore(nativeMethods.native);
+
 module.exports = {
 
 	ready: function ready() {
-		Vue.$log("List ready.", TAG);
+		// Vue.$log("List ready.", TAG);
+		//
+		// Vue.$publishFunction("getUser",this.getUser);
+		// Vue.$publishFunction("addItem",this.addItem);
 
-		Vue.$publishFunction("getUser", this.getUser);
-		Vue.$publishFunction("addItem", this.addItem);
 	},
 
 	components: {
@@ -23157,9 +23218,13 @@ module.exports = {
 
 		clicked: function clicked(item) {
 
-			Vue.$callAsync('getPosition', 13.3, function (data) {
-				Vue.$log(data, TAG);
-			});
+			// Vue.$callAsync('getPosition', 13.3, function(data) {
+			// 	Vue.$log(data, TAG);
+			// });
+
+			// core.logger.info("Hello World", TAG);
+
+			core.callNative('setNavigationBarTitle', item.name);
 		}
 	}
 
@@ -23181,4 +23246,600 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, module.exports.template)
   }
 })()}
-},{"./list-item.vue":9,"vue":6,"vue-hot-reload-api":4,"vueify-insert-css":7}]},{},[8]);
+},{"../../../../index":15,"../config/method-definitions":14,"./list-item.vue":12,"vue":9,"vue-hot-reload-api":7,"vueify-insert-css":10}],14:[function(require,module,exports){
+module.exports = {
+   native: [
+      {
+      	name: 'setNavigationBarTitle',			//Mandatory (unchecked)
+      	payloadType: 'string'
+      }
+   ]
+}
+
+},{}],15:[function(require,module,exports){
+
+var config = require('./config');
+var helpers = require('./lib/helpers');
+var Logger = require('./lib/logger');
+var PrivateHelpers = require('./lib/private-helpers');
+
+// private vars
+var publishedJSFunctions = {};
+var nativeCallbackFunctions = {};
+var privateHelpers;
+var registeredModules = {};
+
+/**
+ * The PKCore class is used to communicate between a JS context and a native iOS or Android app.
+ * @param {array} nativeMethods Method definitions for all methods, that will be implemented on the native side.
+ * @param {array} vueMethods    Method definitions for all methods, that will be implemented on the JS side.
+ * @return {PKCore}      PKCore instance
+ */
+var Core = function PKCore(nativeMethods, JSMethods) {
+
+	// initialize the private helpers
+	privateHelpers = new PrivateHelpers(this, {
+		publishedJSFunctions: publishedJSFunctions,
+		nativeCallbackFunctions: nativeCallbackFunctions
+	});
+
+	/**
+	 * The configuration object
+	 * @type {object}
+	 */
+	this.config = config;
+
+	/**
+	 * Helpers object
+	 * @type {object}
+	 */
+	this.helpers = helpers;
+
+	/**
+	 * A Logger instance for logging messages to the native console
+	 * @type {Logger}
+	 */
+	this.logger = new Logger(this, privateHelpers);
+
+	// add given methods to the config object
+	this.config.nativeMethods = this.config.nativeMethods.concat(nativeMethods);
+	this.config.JSMethods = this.config.JSMethods.concat(JSMethods);
+
+}
+
+/**
+ * Registeres a PEAK Module with this PKCore instance.
+ * @param  {Object} ModuleClass The module class to be instantiated and registered
+ * @return {Object}             An instance of the given module.
+ */
+Core.prototype.registerPKModule = function(ModuleClass) {
+
+	if (module === undefined) {
+		this.logger.error("Cannot register undefined PEAK module");
+		return;
+	}
+
+	var module = new ModuleClass();
+
+	if (module.packageJS === undefined) {
+		this.logger.error("Module has no packageJS property defined!");
+		return;
+	}
+
+	var packageJS = module.packageJS;
+	var moduleName = packageJS.name;
+
+	if (moduleName in registeredModules) {
+		this.logger.info("Module " + moduleName + " was registered already!");
+		return registeredModules[moduleName];
+	}
+
+	if (module.nativeMethods === undefined) {
+		this.logger.error("Module " + moduleName + " has no nativeMethods property!");
+		return;
+	}
+
+	if (module.JSMethods === undefined) {
+		this.logger.error("Module " + moduleName + " has no JSMethods property!");
+		return;
+	}
+
+	module.core = this;
+	module.logger = this.logger;
+
+	// add the module method definitions to the config object
+	this.config.nativeMethods = this.config.nativeMethods.concat(module.nativeMethods);
+	this.config.JSMethods = this.config.JSMethods.concat(module.JSMethods);
+
+	this.logger.info("Module " + moduleName + " with version " + packageJS.version + " was registered");
+
+	return module;
+}
+
+/**
+ * callJS is used by the native side to call a method in JS.
+ * @param  {string} functionName   Name of the JS function.
+ * @param  {any} payload           Payload to deliver to the function.
+ * @param  {string} nativeCallback Function name of the native callback. (Only required on Android)
+ */
+Core.prototype.callJS = function(functionName, payload, nativeCallback) {
+
+	if (this.config.debug) {
+		this.logger.info("JS function " + functionName + " called.");
+		// that.$log("JS function " + functionName + " called.")
+	}
+
+	//Get JS method definition
+	var JSMethodDefinition = privateHelpers.getJSMethodDefinition(functionName);
+
+	// is method defined in config?
+	if (JSMethodDefinition === undefined) {
+		this.logger.error(functionName + "() is not implemented in JavaScript Code!");
+		return;
+	}
+
+	// is payload type correct? (payload types for functions are defined in the config object)
+	if (privateHelpers.isNativeMethodPayloadValid(JSMethodDefinition, payload) == false) {
+		return;
+	}
+
+	// is nativeCallback valid? (callback function names for functions are defined in the config object)
+	if(this.helpers.isAndroid() && privateHelpers.isJSMethodNativeCallbackValid(JSMethodDefinition, nativeCallback) == false){
+		this.logger.error(functionName + "() wrong callback " + nativeCallback + "! Expected: " + JSMethodDefinition.callback.name);
+		return;
+	}
+
+	//Check if this function was published
+	if (functionName in publishedJSFunctions){
+		var callbackData = publishedJSFunctions[functionName](payload);
+
+		if (privateHelpers.isCallbackDataValidForMethodDefinition(JSMethodDefinition.callback, callbackData) == false) {
+			this.logger.error(functionName + "() callback data does not match definition!");
+			return;
+		}
+
+		if(callbackData !== undefined){
+			if (this.helpers.isiOS()) {
+				return callbackData;
+			} else {
+				if(this.config.debug){
+					this.logger.info("Native Callback " + nativeCallback +"() called. With data: " + JSON.stringify(callbackData,null,4));
+				}
+
+				// execute the native call
+				privateHelpers.execNativeCall(core, JSMethodDefinition.callback, callbackData);
+			}
+
+		}
+
+	}
+	else{
+		this.logger.error(functionName + "() is not implemented in JavaScript! (not published?)");
+	}
+}
+
+/**
+ * This function is used by the native side to invoce a callback function.
+ * @param  {string} callbackFunctionName The function name of the callback
+ * @param  {any} jsonData     Payload of the callback.
+ */
+Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
+	//Check if the function is available
+
+	if (this.config.debug) {
+		this.logger.info("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
+	}
+
+	if (callbackFunctionName in nativeCallbackFunctions) {
+
+		var callbackFunction = nativeCallbackFunctions[callbackFunctionName].callbackFunction;
+		var callerFunctionName = nativeCallbackFunctions[callbackFunctionName].callerFunctionName;
+
+		var method = privateHelpers.getNativeMethodDefinition(callerFunctionName);
+
+		if (privateHelpers.isCallbackDataValidForMethodDefinition(method, jsonData) == false) {
+			this.logger.error(callerFunctionName + "() callback data does not match definition!");
+			return;
+		}
+
+		callbackFunction(jsonData);
+
+	} else {
+		this.logger.error(callbackFunctionName + "() callback not defined!");
+	}
+};
+
+/**
+ * callNative is used to call a native function from JS.
+ * @param  {string}   functionName Name of the native function.
+ * @param  {any}   payload      Payload to deliver to the native function
+ * @param  {Function} callback     JS callback function to receive return values from native.
+ */
+Core.prototype.callNative = function(functionName, payload, callback) {
+
+	if (this.config.debug) {
+		this.logger.info("Native function " + functionName + "() called.");
+	}
+
+	//Get native method definition
+	var nativeMethodDefinition = privateHelpers.getNativeMethodDefinition(functionName);
+
+	// is method defined?
+	if (nativeMethodDefinition === undefined) {
+		this.logger.error(functionName + "() is not implemented in Native Code!");
+		return;
+	}
+
+	// is payload type correct?
+	if (privateHelpers.isNativeMethodPayloadValid(nativeMethodDefinition, payload) == false) {
+		return;
+	}
+
+
+	if (callback !== undefined) {
+		//Generate temporary key for callback function
+		var callbackKey = _generateId();
+		nativeCallbackFunctions[callbackKey] = {
+			callerFunctionName: functionName,
+			callbackFunction: function(data) {
+				callback(data);
+				//Free memory
+				nativeCallbackFunctions[callbackKey] = {};
+			}
+		};
+	}
+
+	privateHelpers.execNativeCall(nativeMethodDefinition,payload,callbackKey);
+};
+
+
+/**
+ * Publishes a custom JS function to the PKCore system.
+ * @param  {string} functionName The name of the function.
+ * @param  {object} func         The function itself.
+ */
+Core.prototype.publishFunction = function(functionName, func){
+
+	var JSMethodDefinition = privateHelpers.getJSMethodDefinition(functionName);
+
+	if(JSMethodDefinition === undefined){
+		this.logger.error(functionName +"() is not declared in method definitions!")
+		return;
+	}
+
+	//Register a callable JS Function that simply broadcasts an event that has the same name as the function
+	publishedJSFunctions[functionName] = func;
+	if(this.config.debug){
+		this.logger.info(functionName + "() has been published!")
+	}
+};
+
+
+
+
+// Export the PKCore class
+module.exports = Core;
+
+},{"./config":1,"./lib/helpers":16,"./lib/logger":17,"./lib/private-helpers":18}],16:[function(require,module,exports){
+
+var helpers = {};
+module.exports = helpers;
+
+/**
+ * Checks wether the current user agent is running Android
+ * @return {boolean} True if user agent is android
+ */
+helpers.isAndroid = function(){
+	   if ((typeof navigator == 'undefined')) {
+			return false;
+		}
+		var ua = navigator.userAgent.toLowerCase();
+  		return ua.indexOf("android") > -1;
+};
+
+/**
+ * Checks wether the current user agent is running iOS
+ * @return {boolean} True if user agent is iOS
+ */
+helpers.isiOS = function(){
+  		return !helpers.isAndroid();
+};
+
+},{}],17:[function(require,module,exports){
+var PrivateHelpers = require('./private-helpers');
+
+/**
+ * Logger class acts as proxy to deliver console.logs to the native side. (They than show up in the native console instead of just in the JS console)
+ * @param  {PKCore} core An instance of the PKCore class to handle native communications.
+ * @param  {array} privateHelpers The private helpers of the PKCore class.
+ * @return {Logger}      Logger instance
+ */
+var logger = function Logger(core, privateHelpers) {
+   if (core === undefined) {
+      console.error("No PKCore instance given!");
+   }
+   if (privateHelpers === undefined) {
+      console.error("No PKCore Private Helpers given!");
+   }
+   this.core = core;
+   this.config = core.config;
+   this.privateHelpers = privateHelpers;
+}
+
+/**
+ * Log a debug message to the JS console and via PKCore to the native console.
+ * @param  {string} message The message that should be logged.
+ * @param  {string} customTag The log message will include this custom tag if provided.
+ */
+logger.prototype.info = function(message, customTag) {
+
+   if (customTag === undefined)
+      customTag = this.config.consoleTag;
+   else
+      customTag = this.config.consoleTag + " " + customTag;
+
+   var logMsg = customTag + ": " + message;
+
+   var logMethodDefinition = this.privateHelpers.getNativeMethodDefinition("log");
+	this.privateHelpers.execNativeCall(logMethodDefinition, logMsg);
+
+   console.log(logMsg);
+}
+
+/**
+ * Log an error message to the JS console and via PKCore to the native console.
+ * @param  {string} message The message that should be logged.
+ * @param  {string} customTag The log message will include this custom tag if provided.
+ */
+logger.prototype.error = function(message, customTag) {
+
+   if (customTag === undefined)
+      customTag = this.config.consoleTag;
+   else
+      customTag = this.config.consoleTag + " " + customTag;
+
+   var logMsg = customTag + ": " + message;
+
+   var logMethodDefinition = this.privateHelpers.getNativeMethodDefinition("logError");
+	this.privateHelpers.execNativeCall(logMethodDefinition, logMsg);
+
+   console.error(logMsg);
+}
+
+module.exports = logger;
+
+},{"./private-helpers":18}],18:[function(require,module,exports){
+
+/**
+ * A collection of private helpers to operate PKCore.
+ * @param {PKCore} core        A PKCore instance
+ * @param {object} privateData Data that some private helpers need.
+ */
+var Helpers = function PrivateHelpers(core, privateData) {
+   this.core = core;
+   this.publishedJSFunctions = privateData.publishedJSFunctions;
+   this.nativeCallbackFunctions = privateData.nativeCallbackFunctions;
+}
+
+
+/**
+ * Gets the native method definition for a given function name. (Method definitions are defined in the config object)
+ * @param  {string} functionName The name of the function whos definition has to be returned.
+ * @return {object}              Function definition or undefined if function not found.
+ */
+Helpers.prototype.getNativeMethodDefinition = function(functionName) {
+	for (var i = 0; i < this.core.config.nativeMethods.length; i++) {
+		var method = this.core.config.nativeMethods[i];
+		if (method.name == functionName) {
+			return method;
+		}
+	}
+	return undefined;
+};
+
+
+/**
+ * Gets the JS method definition for a given function name. (Method definitions are defined in the config object)
+ * @param  {string} functionName The name of the function whos definition has to be returned.
+ * @return {object}              Function definition or undefined if function not found.
+ */
+Helpers.prototype.getJSMethodDefinition = function(functionName) {
+	for (var i = 0; i < this.core.config.JSMethods.length; i++) {
+		var method = this.core.config.JSMethods[i];
+		if (method.name == functionName) {
+			return method;
+		}
+	}
+	return undefined;
+};
+
+/**
+ * Checks wether a given payload type matches the definition in the config object for that method.
+ * @param  {object} nativeMethodDefinition Method definition of the method which payload has to be checked.
+ * @param  {any} payload                The payload given.
+ * @return {boolean}                        true or false wether the definition matches the payload or not.
+ */
+Helpers.prototype.isNativeMethodPayloadValid = function(nativeMethodDefinition, payload) {
+
+	if (payload == null) {
+		if  (nativeMethodDefinition.payloadType != 'none') {
+			this.core.logger.error(nativeMethodDefinition.name + '(<'+ type +'>) Type mismatch. Expected <'+ nativeMethodDefinition.payloadType +'>');
+			return false;
+		}
+		return true;
+	}
+
+
+	var type = typeof(payload);
+
+	if (type == 'object' && payload.length !== undefined) { // if array
+		type = 'array';
+	}
+
+	if (type != nativeMethodDefinition.payloadType) {
+		this.core.logger.error(nativeMethodDefinition.name + '(<'+ type +'>) Type mismatch. Expected <'+ nativeMethodDefinition.payloadType +'>');
+		return false;
+	}
+
+	//Check payloadData for objects
+	if (type == 'object'){
+		if (nativeMethodDefinition.payloadData === undefined){
+			this.core.logger.error(nativeMethodDefinition.name + "PayloadData not declared!");
+			return false;
+		}
+		for (var key in nativeMethodDefinition.payloadData) {
+			if ((key in payload) == false) {
+				this.core.logger.error(nativeMethodDefinition.name + "PayloadData mismatch! Expected <'" + key + "'>");
+				return false;
+			}
+	}
+
+	}
+
+	return true;
+
+};
+
+/**
+ * Checks wether the given native callback function name matches the defined name in the config object.
+ * @param  {object} JSMethodDefinition Method definition for the called js function.
+ * @param  {string} nativeCallback      Function name of the native callback.
+ * @return {boolean}                     true or false
+ */
+Helpers.prototype.isJSMethodNativeCallbackValid = function(JSMethodDefinition, nativeCallback) {
+
+	if(JSMethodDefinition.callback === undefined && (nativeCallback === undefined || nativeCallback === null)){
+		return true;
+	}
+
+	if(JSMethodDefinition.callback === undefined){
+		return false;
+	}
+
+	if(JSMethodDefinition.callback.name == nativeCallback){
+		return true;
+	}
+
+	return false;
+};
+
+/**
+ * Checks wether the given data from a callback matches the method definition.
+ * @param  {object} JSMethodDefinition Method definition for the called js function.
+ * @param  {[type]} jsonData         Callback payload
+ * @return {boolean}                  true or false
+ */
+Helpers.prototype.isCallbackDataValidForMethodDefinition = function(JSMethodDefinition, jsonData) {
+	//Used for VUE/JS Functions without a callback
+	if(JSMethodDefinition === undefined && jsonData === undefined){
+		return true;
+	}
+
+	if (JSMethodDefinition.callbackData === undefined && jsonData === undefined) {
+		return true;
+	}
+
+	var type = typeof(jsonData);
+	if (type == 'object' && jsonData.length !== undefined) { // if array
+		type = 'array';
+	}
+
+	if (type != JSMethodDefinition.callbackDataType) {
+		this.core.logger.error(JSMethodDefinition.name + '(<'+ type +'>) callback data type mismatch. Expected <'+ methodDefinition.callbackDataType +'>');
+		return false;
+	}
+
+	if(type == 'object'){
+		for (var key in JSMethodDefinition.callbackData) {
+			if ((key in jsonData) == false) {
+				this.core.logger.error(JSMethodDefinition.name + "CallbackData mismatch! Expected <'" + key + "'>");
+				return false;
+			}
+		}
+	}
+
+	return true;
+};
+
+/**
+ * Invokes a native method.
+ * @param  {object} nativeMethodDefinition Method definition for native function
+ * @param  {any} payload                   Native method payload
+ * @param  {string} callbackKey            JS Callback function name.
+ */
+Helpers.prototype.execNativeCall = function(nativeMethodDefinition, payload, callbackKey) {
+	if (this.core.helpers.isiOS()) {
+
+      if (typeof(window) == 'undefined' || typeof(window.webkit) == 'undefined' || typeof(window.webkit.messageHandlers) == 'undefined') {
+			return;
+		}
+
+		window.webkit.messageHandlers.observe.postMessage({
+			functionName: nativeMethodDefinition.name,
+			payload: payload,
+			callbackKey: callbackKey
+		});
+
+	} else if (this.core.helpers.isAndroid()) {
+
+		if (typeof(AndroidNative) == 'undefined') {
+			this.core.logger.error(" No Android environment. Async call cancelled.");
+			return;
+		}
+
+		//Invoke native function with callback key as String
+		if(payload === null || payload === undefined) {
+			if(callbackKey === undefined){
+				AndroidNative[nativeMethodDefinition.name]();
+			}else{
+				AndroidNative[nativeMethodDefinition.name](callbackKey);
+			}
+		}else{
+			//Convert Objects to String
+			if(typeof(payload) == 'object'){
+				payload = JSON.stringify(payload);
+			}
+			if(callbackKey === undefined){
+				AndroidNative[nativeMethodDefinition.name](payload);
+			}else{
+				AndroidNative[nativeMethodDefinition.name](payload,callbackKey);
+			}
+		}
+	}
+};
+
+/**
+ * Generates a random function name
+ * @return {string} Random function name
+ */
+Helpers.prototype.generateId = function() {
+   var cid = "";
+   var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+   for( var i=0; i < 8; i++ ) {
+      cid += chars.charAt(Math.floor(Math.random() * chars.length));
+   }
+   return cid;
+};
+
+
+module.exports = Helpers;
+
+},{}],19:[function(require,module,exports){
+module.exports={
+  "name": "@bitmechanics/peak-core",
+  "version": "1.0.1",
+  "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example": "node ./examples/normal-usage.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://robin-bitmechanics@bitbucket.org/bitmechanicsgmbh/peak-core.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+},{}]},{},[11]);

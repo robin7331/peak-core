@@ -1,13 +1,15 @@
 var DEBUG = true
+
 var Vue = require('vue');
+
+var PKCore = require('../../../index');
+var nativeMethods = require('./config/method-definitions');
+var core = new PKCore(nativeMethods.native);
+
 if(DEBUG) {
 	Vue.config.debug = true;
-	Vue.config.devtools = false;
+	Vue.config.devtools = true;
 }
-
-// var methods = require('./vue-native-interface-methods.js');
-// var NativeInterface = require('./vue/vue-native-interface.js');
-// Vue.use(NativeInterface,{methods: methods, debug: DEBUG});
 
 var vueTouch = require('vue-touch');
 var options = {};
@@ -27,12 +29,6 @@ MyAPP = new Vue({
 		'list' : List
 	},
 	ready: function() {
-		//  Vue.$vueReady(TAG);
-		//this.$call("test");
-
-		//console.log("isAndroid: " + this.$isAndroid());
-		//console.log("isiOS: " + this.$isiOS());
-
-		//console.log("user agent: " + navigator.userAgent);
+		core.logger.info("Hello World from JavaScript!");
 	}
 });
