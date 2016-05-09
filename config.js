@@ -8,4 +8,4 @@ config.debug = true;
 config.consoleTag = "PEAK Core (" + pjson.version + ")";
 
 config.nativeMethods = require('./config/supported-native-methods');
-config.vueMethods = require('./config/supported-vue-methods');
+config.JSMethods = require('./config/supported-js-methods');
