@@ -1,6 +1,6 @@
 {
   "name": "@bitmechanics/peak-core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
   "main": "index.js",
   "scripts": {
