@@ -6,12 +6,12 @@ Vue.config.debug = DEBUG;
 
 var PeakCore = require('../../../index');
 var nativeMethods = require('./config/method-definitions');
-var core = new PeakCore(nativeMethods.native);
-core.config.debug = DEBUG;
-Vue.use(core);
+var peak = new PeakCore(nativeMethods.native);
+peak.config.debug = DEBUG;
+Vue.use(peak);
 
 var PeakModule = require('../../PeakModule');
-var peakModule = core.installPeakModule(PeakModule, Vue);
+var peakModule = peak.installPeakModule(PeakModule, Vue);
 
 
 var vueTouch = require('vue-touch');

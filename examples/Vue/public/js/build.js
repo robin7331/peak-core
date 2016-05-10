@@ -62,7 +62,7 @@ module.exports = [
 
 
 
-var BasicEvents = function PeakBasicEvents(nativeMethods, JSMethods) {
+var BasicEvents = function PeakBasicEvents() {
    this.packageJSON = require('./package.json');
    this.nativeMethods = [];
    this.JSMethods = [];
@@ -70,7 +70,11 @@ var BasicEvents = function PeakBasicEvents(nativeMethods, JSMethods) {
 }
 
 BasicEvents.prototype.testMethod = function(msg) {
-   this.info(msg);
+   this.info("TestMethod of PeakBasicEvents module called");
+
+   this.peak.callNative("callbackTest", 123, function(payload) {
+      that.peak.info(payload);
+   });
 }
 
 BasicEvents.prototype.install = function(Vue, options) {
@@ -23153,12 +23157,12 @@ Vue.config.debug = DEBUG;
 
 var PeakCore = require('../../../index');
 var nativeMethods = require('./config/method-definitions');
-var core = new PeakCore(nativeMethods.native);
-core.config.debug = DEBUG;
-Vue.use(core);
+var peak = new PeakCore(nativeMethods.native);
+peak.config.debug = DEBUG;
+Vue.use(peak);
 
 var PeakModule = require('../../PeakModule');
-var peakModule = core.installPeakModule(PeakModule, Vue);
+var peakModule = peak.installPeakModule(PeakModule, Vue);
 
 
 var vueTouch = require('vue-touch');
@@ -23514,8 +23518,7 @@ Core.prototype.installPeakModule = function(ModuleClass, Vue) {
 	}
 
 	// populate module with basic functions
-	module.core = this;
-	module.logger = this.logger;
+	module.peak = this;
 	module.error = this.error;
 	module.info = this.info;
 
@@ -23947,7 +23950,7 @@ module.exports = Helpers;
 },{}],22:[function(require,module,exports){
 module.exports={
   "name": "@bitmechanics/peak-core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
   "main": "index.js",
   "scripts": {

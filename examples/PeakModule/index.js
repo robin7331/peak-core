@@ -9,7 +9,11 @@ var BasicEvents = function PeakBasicEvents() {
 }
 
 BasicEvents.prototype.testMethod = function(msg) {
-   this.info(msg);
+   this.info("TestMethod of PeakBasicEvents module called");
+
+   this.peak.callNative("callbackTest", 123, function(payload) {
+      that.peak.info(payload);
+   });
 }
 
 BasicEvents.prototype.install = function(Vue, options) {
