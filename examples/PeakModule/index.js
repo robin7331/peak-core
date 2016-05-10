@@ -1,7 +1,10 @@
 
 
 
-var BasicEvents = function PeakBasicEvents() {
+var BasicEvents = function PeakBasicEvents(peak) {
+   this.peak = peak;
+   this.error = peak.error;
+   this.info = peak.info;
    this.packageJSON = require('./package.json');
    this.nativeMethods = [
       {
@@ -22,8 +25,6 @@ BasicEvents.prototype.getCachedJSON = function(name) {
 
 }
 
-
-
 BasicEvents.prototype.testMethod = function(msg) {
    this.log("TestMethod of PeakBasicEvents module called");
 
@@ -33,25 +34,5 @@ BasicEvents.prototype.testMethod = function(msg) {
       that.peak.info(payload);
    });
 }
-
-BasicEvents.prototype.install = function(Vue, options) {
-
-   var that = this; // that == PeakBasicEvents
-
-   Vue.globalMethodTest = function(msg) {
-      that.info(msg);
-   };
-
-
-   Vue.prototype.$instanceMethodTest = function(msg) {
-      that.info(msg);
-   }
-
-   Vue.directive('my-directive', {
-      this.getCachedJSON("Bla");
-   });
-
-}
-
 
 module.exports = BasicEvents;
