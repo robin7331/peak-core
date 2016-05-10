@@ -1,7 +1,7 @@
 
 
 
-var BasicEvents = function PeakBasicEvents(nativeMethods, JSMethods) {
+var BasicEvents = function PeakBasicEvents() {
    this.packageJSON = require('./package.json');
    this.nativeMethods = [];
    this.JSMethods = [];

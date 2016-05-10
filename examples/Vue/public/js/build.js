@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var pjson = require('./package.json');
+var pjson = require('../package.json');
 
 var config = {};
 
@@ -19,18 +19,18 @@ config.consoleTag = "PEAK Core (" + pjson.version + ")";
  * Method definitions for native methods.
  * @param  {array} An array of method definitions.
  */
-config.nativeMethods = require('./config/supported-native-methods');
+config.nativeMethods = require('./required-native-methods');
 
 /**
  * Method definitions for JS methods.
  * @param  {array} An array of method definitions.
  */
-config.JSMethods = require('./config/supported-js-methods');
+config.JSMethods = require('./required-js-methods');
 
 
 module.exports = config;
 
-},{"./config/supported-js-methods":2,"./config/supported-native-methods":3,"./package.json":21}],2:[function(require,module,exports){
+},{"../package.json":22,"./required-js-methods":2,"./required-native-methods":3}],2:[function(require,module,exports){
 module.exports = [
 	{
 		name: 'enableDebug',	//Mandatory (unchecked)
@@ -23310,10 +23310,106 @@ module.exports = {
 },{}],17:[function(require,module,exports){
 "use strict";
 
-var config = require('./config');
-var helpers = require('./lib/helpers');
-var Logger = require('./lib/logger');
-var PrivateHelpers = require('./lib/private-helpers');
+var PeakCore = require('./lib/peak-core');
+
+//
+// Export the PeakCore class
+module.exports = PeakCore;
+
+},{"./lib/peak-core":20}],18:[function(require,module,exports){
+
+var helpers = {};
+module.exports = helpers;
+
+/**
+ * Checks wether the current user agent is running Android
+ * @return {boolean} True if user agent is android
+ */
+helpers.isAndroid = function(){
+	   if ((typeof navigator == 'undefined')) {
+			return false;
+		}
+		var ua = navigator.userAgent.toLowerCase();
+  		return ua.indexOf("android") > -1;
+};
+
+/**
+ * Checks wether the current user agent is running iOS
+ * @return {boolean} True if user agent is iOS
+ */
+helpers.isiOS = function(){
+  		return !helpers.isAndroid();
+};
+
+},{}],19:[function(require,module,exports){
+
+/**
+ * Logger class acts as proxy to deliver console.logs to the native side. (They than show up in the native console instead of just in the JS console)
+ * @param  {PeakCore} core An instance of the PeakCore class to handle native communications.
+ * @param  {array} privateHelpers The private helpers of the PeakCore class.
+ * @return {Logger}      Logger instance
+ */
+var logger = function Logger(core, privateHelpers) {
+   if (core === undefined) {
+      console.error("No PeakCore instance given!");
+   }
+   if (privateHelpers === undefined) {
+      console.error("No PeakCore Private Helpers given!");
+   }
+   this.core = core;
+   this.config = core.config;
+   this.privateHelpers = privateHelpers;
+}
+
+/**
+ * Log a debug message to the JS console and via PeakCore to the native console.
+ * @param  {string} message The message that should be logged.
+ * @param  {string} customTag The log message will include this custom tag if provided.
+ */
+logger.prototype.info = function(message, customTag) {
+
+   if (customTag === undefined)
+      customTag = this.config.consoleTag;
+   else
+      customTag = this.config.consoleTag + " [" + customTag + "]";
+
+   var logMsg = customTag + ": " + message;
+
+   var logMethodDefinition = this.privateHelpers.getNativeMethodDefinition("log");
+	this.privateHelpers.execNativeCall(logMethodDefinition, logMsg);
+
+   console.log(logMsg);
+}
+
+/**
+ * Log an error message to the JS console and via PeakCore to the native console.
+ * @param  {string} message The message that should be logged.
+ * @param  {string} customTag The log message will include this custom tag if provided.
+ */
+logger.prototype.error = function(message, customTag) {
+
+   if (customTag === undefined)
+      customTag = this.config.consoleTag;
+   else
+      customTag = this.config.consoleTag + " [" + customTag + "]";
+
+   var logMsg = customTag + ": " + message;
+
+   var logMethodDefinition = this.privateHelpers.getNativeMethodDefinition("logError");
+	this.privateHelpers.execNativeCall(logMethodDefinition, logMsg);
+
+   console.error(logMsg);
+}
+
+module.exports = logger;
+
+},{}],20:[function(require,module,exports){
+"use strict";
+
+var config = require('../config/config');
+var helpers = require('./helpers');
+var Logger = require('./logger');
+var PrivateHelpers = require('./private-helpers');
 
 // private vars
 var publishedJSFunctions = {};
@@ -23517,9 +23613,6 @@ Core.prototype.callJS = function(functionName, payload, nativeCallback) {
  * @param  {any} jsonData     Payload of the callback.
  */
 Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
-	//Check if the function is available
-	//
-	this.info("cb");
 
 	if (this.config.debug) {
 		this.info("JS callback '" + callbackFunctionName + "'' called. With data: " + JSON.stringify(jsonData,null,4));
@@ -23622,94 +23715,7 @@ Core.prototype.install = function (Vue, options) {
 // Export the PeakCore class
 module.exports = Core;
 
-},{"./config":1,"./lib/helpers":18,"./lib/logger":19,"./lib/private-helpers":20}],18:[function(require,module,exports){
-
-var helpers = {};
-module.exports = helpers;
-
-/**
- * Checks wether the current user agent is running Android
- * @return {boolean} True if user agent is android
- */
-helpers.isAndroid = function(){
-	   if ((typeof navigator == 'undefined')) {
-			return false;
-		}
-		var ua = navigator.userAgent.toLowerCase();
-  		return ua.indexOf("android") > -1;
-};
-
-/**
- * Checks wether the current user agent is running iOS
- * @return {boolean} True if user agent is iOS
- */
-helpers.isiOS = function(){
-  		return !helpers.isAndroid();
-};
-
-},{}],19:[function(require,module,exports){
-
-/**
- * Logger class acts as proxy to deliver console.logs to the native side. (They than show up in the native console instead of just in the JS console)
- * @param  {PeakCore} core An instance of the PeakCore class to handle native communications.
- * @param  {array} privateHelpers The private helpers of the PeakCore class.
- * @return {Logger}      Logger instance
- */
-var logger = function Logger(core, privateHelpers) {
-   if (core === undefined) {
-      console.error("No PeakCore instance given!");
-   }
-   if (privateHelpers === undefined) {
-      console.error("No PeakCore Private Helpers given!");
-   }
-   this.core = core;
-   this.config = core.config;
-   this.privateHelpers = privateHelpers;
-}
-
-/**
- * Log a debug message to the JS console and via PeakCore to the native console.
- * @param  {string} message The message that should be logged.
- * @param  {string} customTag The log message will include this custom tag if provided.
- */
-logger.prototype.info = function(message, customTag) {
-
-   if (customTag === undefined)
-      customTag = this.config.consoleTag;
-   else
-      customTag = this.config.consoleTag + " [" + customTag + "]";
-
-   var logMsg = customTag + ": " + message;
-
-   var logMethodDefinition = this.privateHelpers.getNativeMethodDefinition("log");
-	this.privateHelpers.execNativeCall(logMethodDefinition, logMsg);
-
-   console.log(logMsg);
-}
-
-/**
- * Log an error message to the JS console and via PeakCore to the native console.
- * @param  {string} message The message that should be logged.
- * @param  {string} customTag The log message will include this custom tag if provided.
- */
-logger.prototype.error = function(message, customTag) {
-
-   if (customTag === undefined)
-      customTag = this.config.consoleTag;
-   else
-      customTag = this.config.consoleTag + " [" + customTag + "]";
-
-   var logMsg = customTag + ": " + message;
-
-   var logMethodDefinition = this.privateHelpers.getNativeMethodDefinition("logError");
-	this.privateHelpers.execNativeCall(logMethodDefinition, logMsg);
-
-   console.error(logMsg);
-}
-
-module.exports = logger;
-
-},{}],20:[function(require,module,exports){
+},{"../config/config":1,"./helpers":18,"./logger":19,"./private-helpers":21}],21:[function(require,module,exports){
 
 /**
  * A collection of private helpers to operate PeakCore.
@@ -23938,7 +23944,7 @@ Helpers.prototype.toCamelCase = function(str) {
 
 module.exports = Helpers;
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 module.exports={
   "name": "@bitmechanics/peak-core",
   "version": "1.0.3",

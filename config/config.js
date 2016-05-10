@@ -1,4 +1,4 @@
-var pjson = require('./package.json');
+var pjson = require('../package.json');
 
 var config = {};
 
@@ -18,13 +18,13 @@ config.consoleTag = "PEAK Core (" + pjson.version + ")";
  * Method definitions for native methods.
  * @param  {array} An array of method definitions.
  */
-config.nativeMethods = require('./config/supported-native-methods');
+config.nativeMethods = require('./required-native-methods');
 
 /**
  * Method definitions for JS methods.
  * @param  {array} An array of method definitions.
  */
-config.JSMethods = require('./config/supported-js-methods');
+config.JSMethods = require('./required-js-methods');
 
 
 module.exports = config;
