@@ -8,10 +8,13 @@ var PeakCore = require('../../../index');
 var nativeMethods = require('./config/method-definitions');
 var peak = new PeakCore(nativeMethods.native);
 peak.config.debug = DEBUG;
-Vue.use(peak);
+peak.makeGlobal();
+
 
 var PeakModule = require('../../PeakModule');
-var peakModule = peak.installPeakModule(PeakModule, Vue);
+var peakModule = peak.installPeakModule(PeakModule)
+Vue.use(peakModule);
+
 
 
 var vueTouch = require('vue-touch');
@@ -32,6 +35,7 @@ MyAPP = new Vue({
 	},
 	ready: function() {
 		this.peak.info("Hello from Vue");
+
 
 		this.peak.callNative("logTest", "This is a fucking Log");
 	}

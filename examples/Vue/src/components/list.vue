@@ -75,13 +75,23 @@ module.exports = {
 
 		clicked: function(item) {
 
-			var basicEvents = this.peak.modules.peakBasicEvents;
-			basicEvents.testMethod("OMFG!");
+			// var basicEvents = this.peak.modules.peakBasicEvents;
+			// basicEvents.getCachedJSON("")
+			//
+			// var that = this;
+			// this.peak.callNative("callbackTest", 123, function(payload) {
+			// 	that.peak.info(payload);
+			// });
+			//
+			// window.peak.info();
+			// this.info();
+			//
+			// o
 
-			var that = this;
-			this.peak.callNative("callbackTest", 123, function(payload) {
-				that.peak.info(payload);
-			});
+
+			peak.helpers.isAndroid();
+
+			peak.info();
 
 
 		}
