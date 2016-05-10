@@ -1,0 +1,10 @@
+{
+  "name": "peak-cache",
+  "version": "1.0.0",
+  "description": "",
+  "main": "peak-cache.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robin Reiter & Matthias Hermann"
+}
