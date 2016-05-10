@@ -35,7 +35,6 @@ vueify.compiler.applyConfig({
   //  includePaths: [...]
   //},
   // configure autoprefixer
-  debug : true,
   autoprefixer: {
     browsers: ['last 2 versions']
   }
