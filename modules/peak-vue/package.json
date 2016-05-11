@@ -1,8 +1,8 @@
 {
-  "name": "peak-basic-events",
+  "name": "peak-vue",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "peak-vue.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
