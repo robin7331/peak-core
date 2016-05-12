@@ -7,9 +7,6 @@
         android:minSdkVersion="18"
         android:targetSdkVersion="23" />
 
-    <!-- Required to access Google Play Licensing -->
-    <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
-
     <!-- Required to download files from Google Play -->
     <uses-permission android:name="android.permission.INTERNET" />
 

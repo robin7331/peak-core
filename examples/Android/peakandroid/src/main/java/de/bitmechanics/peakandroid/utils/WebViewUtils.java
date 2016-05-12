@@ -163,8 +163,6 @@ public class WebViewUtils {
     }
 
 
-
-
     static public void saveState(WebView wv, Bundle out) {
         wv.saveState(out);
     }

@@ -1,12 +1,15 @@
 package de.bitmechanics.peakandroid.core;
 
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -14,14 +17,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 
-import de.bitmechanics.peakandroid.modules.ActionsModuleOne;
+import de.bitmechanics.peakandroid.modules.ChainedActionsModule;
 
 /**
  * Created by Matthias on 4/30/2016.
  */
-public abstract class PeakCore extends ActionsModuleOne {
+public abstract class PeakCore extends ChainedActionsModule {
 
 
 
@@ -29,13 +33,14 @@ public abstract class PeakCore extends ActionsModuleOne {
         public void call(String payload);
     }
 
-    //    public final String ANDROID_GLOBAL = "PeakCore";
-    public final String ANDROID_GLOBAL = "AndroidNative";
+    private final String ANDROID_GLOBAL = "PeakCore";
+//  public final String ANDROID_GLOBAL = "AndroidNative";
+    private final String CACHE_DIR_NAME = "PeakWebViewCache";
     private final String TAG = PeakCore.class.getCanonicalName();
-    private final String VUE_PLUGIN_CALLBACK = "Vue.NativeInterface.callCallback";
-    private final String VUE_PLUGIN_CALLJS = "Vue.NativeInterface.callJS";
-    //    private final String VUE_PLUGIN_CALLBACK = "window.peak.callCallback";
-//    private final String VUE_PLUGIN_CALLJS = "window.peak.callJS";
+//  private final String VUE_PLUGIN_CALLBACK = "Vue.NativeInterface.callCallback";
+//  private final String VUE_PLUGIN_CALLJS = "Vue.NativeInterface.callJS";
+    private final String VUE_PLUGIN_CALLBACK = "window.peak.callCallback";
+    private final String VUE_PLUGIN_CALLJS = "window.peak.callJS";
     private final HashMap<String, NativeInterfaceCallback> CALLBACKS = new HashMap<String, NativeInterfaceCallback>();
     private final MyHandler handler;
     private final WebView webView;
@@ -47,35 +52,23 @@ public abstract class PeakCore extends ActionsModuleOne {
         this.webView = webView;
         this.handler = new MyHandler(Looper.getMainLooper());
 
+        //Initialize WebClients
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebViewClient(new WebViewClient());
         //Configuration
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAllowFileAccessFromFileURLs(true);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setAppCachePath(ctx.getCacheDir() + File.separator + CACHE_DIR_NAME );
+        webView.getSettings().setAppCacheEnabled( true );
+        webView.getSettings().setCacheMode( WebSettings.LOAD_DEFAULT ); // load online by default
+        if ( !isNetworkAvailable() ) { // loading offline
+            webView.getSettings().setCacheMode( WebSettings.LOAD_CACHE_ELSE_NETWORK );
+        }
+        //Set JavaScript Interface
         webView.addJavascriptInterface(this, ANDROID_GLOBAL);
-
-//        WebView webView = new WebView( context );
-//        webView.getSettings().setAppCacheMaxSize( 5 * 1024 * 1024 ); // 5MB
-//        webView.getSettings().setAppCachePath( getApplicationContext().getCacheDir().getAbsolutePath() );
-//        webView.getSettings().setAllowFileAccess( true );
-//        webView.getSettings().setAppCacheEnabled( true );
-//        webView.getSettings().setJavaScriptEnabled( true );
-//        webView.getSettings().setCacheMode( WebSettings.LOAD_DEFAULT ); // load online by default
-//
-//        if ( !isNetworkAvailable() ) { // loading offline
-//            webView.getSettings().setCacheMode( WebSettings.LOAD_CACHE_ELSE_NETWORK );
-//        }
-//
-//        webView.loadUrl( "http://www.google.com" );
     }
-
-    //    private boolean isNetworkAvailable() {
-//        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService( CONNECTIVITY_SERVICE );
-//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-//        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-//    }
-
 
     @JavascriptInterface
     protected void log(String message) {
@@ -324,6 +317,12 @@ public abstract class PeakCore extends ActionsModuleOne {
         if (DEBUG)
             Log.d(TAG, "Native Method called: " + methodName + " Payload: " + payload + " CallbackKey: " + callBackKey);
     }
+    
 
+    private boolean isNetworkAvailable() {
+       ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService( ctx.CONNECTIVITY_SERVICE );
+       NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+       return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+   }
 
 }

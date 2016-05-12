@@ -15,11 +15,11 @@ import de.bitmechanics.peakandroid.core.PeakCore;
 /**
  * Created by Matthias on 5/10/2016.
  */
-public abstract class ActionsModuleOne extends CacheModuleTwo {
+public abstract class ChainedActionsModule extends ChainedCacheModule {
 
     protected final String PEAK_ACTIONS_MODULE = "PeakNativeCacheModule";
 
-    private final String TAG = ActionsModuleOne.class.getCanonicalName();
+    private final String TAG = ChainedActionsModule.class.getCanonicalName();
 
 
     @Override

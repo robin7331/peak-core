@@ -18,12 +18,12 @@ var Cache = function (peak) {
                 callbackDataType: 'string'
             },
 			{
-                name: 'getCachedAsText',	
+                name: 'getCachedObj',	
                 payloadType: 'string',
                 callbackDataType: 'string'
             },
             {
-                name: 'updateCacheAsText',	
+                name: 'updateCacheObj',	
                 payloadType: 'string',
                 callbackDataType: 'string'
             }
@@ -39,11 +39,11 @@ Actions.prototype.updateCache = function(url, callback) {
      this.peak.callNative('updateCache',url, callback);
 }
 
-Actions.prototype.getCachedAsText = function(url, callback) {
+Actions.prototype.getCachedObj = function(url, callback) {
      this.peak.callNative('getCachedAsText',url, callback);
 }
 
-Actions.prototype.updateCacheAsText = function(url, callback) {
+Actions.prototype.updateCacheObj = function(url, callback) {
      this.peak.callNative('updateCacheAsText',url, callback);
 }
 
