@@ -7,7 +7,11 @@ import android.webkit.WebView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.bitmechanics.peakandroid.core.BasePeakCore;
 import de.bitmechanics.peakandroid.core.PeakCore;
+import de.bitmechanics.peakandroid.modules.ActionsModule;
+import de.bitmechanics.peakandroid.modules.CacheModule;
+import de.bitmechanics.peakandroid.types.ISimpleCallback;
 
 /**
  * Created by Matthias on 5/1/2016.
@@ -18,10 +22,9 @@ public class ExampleWebviewNativeInterface extends PeakCore {
 
     public ExampleWebviewNativeInterface(WebView webView) {
         super(webView);
+        super.useModule(new CacheModule(webView.getContext()));
+        super.useModule(new ActionsModule(webView.getContext()));
     }
-
-    @Override
-    protected String[] getModules(){return new String[]{PEAK_ACTIONS_MODULE,PEAK_CACHE_MODULE};};
 
     @JavascriptInterface
     public void itemClicked(String payload, String callbackKey) {
@@ -32,6 +35,7 @@ public class ExampleWebviewNativeInterface extends PeakCore {
     public void setTitle(String payload, String callbackKey) {
         Log.e(TAG, payload);
     }
+
 
     @JavascriptInterface
     public void getPosition(float payload, String callbackKey) {
@@ -54,7 +58,7 @@ public class ExampleWebviewNativeInterface extends PeakCore {
 
     public void getUser(String userName){
 
-        callJS("getUser", userName, new PeakCore.NativeInterfaceCallback() {
+        callJS("getUser", userName, new ISimpleCallback() {
             @Override
             public void call(String payload) {
                 logPayload("getUserCallback",payload,null);

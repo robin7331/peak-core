@@ -1,8 +1,8 @@
 package de.bitmechanics.matthias.Activity;
 
-import de.bitmechanics.peakandroid.utils.RequestPermissionActivity;
+import de.bitmechanics.peakandroid.utils.RequestPermissionsActivity;
 
-public class PermissionActivity extends RequestPermissionActivity {
+public class PermissionActivity extends RequestPermissionsActivity {
 
     @Override
     protected Class getStartActivity() {
