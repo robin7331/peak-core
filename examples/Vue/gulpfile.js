@@ -6,6 +6,7 @@
 		# gulp watch	// Watches
 		# gulp sync 	// Browser Sync + Watch
 		# gulp server   // Starts the server
+		# gulp zip 		// Creates an updateable zip
 	Supports 5 private Gulp tasks
 		# gulp _vue 		// Vueify
 		# gulp _js 		// Copies JS
@@ -14,9 +15,11 @@
 		# gulp _sass 	// Compiles SCSS and Copies CSS
 */
 var INPUT_DIR =  'src';
-var OUTPUT_DIR = 'public';
+var OUTPUT_DIR = 'public/webapp';
 var SERVER_DIR = "server";
 
+var fs = require("fs");
+var zip = require('gulp-zip');
 var fs = require("fs");
 var mkpath = require('mkpath');
 var browserify = require('browserify');
@@ -123,6 +126,29 @@ gulp.task('server', function() {
         ext: 'js'
     });
 });
+
+//Creates an updateable zip
+gulp.task('zip', function () {
+	var rootFolder = OUTPUT_DIR.substr(0,OUTPUT_DIR.lastIndexOf("/"));
+	var d = new Date();
+	var zipFile = './'+ rootFolder +'/update.zip';
+	var versionFile = "./" + rootFolder + "/version.json";
+	versionNumber = 1.0;
+	try{
+		var vers = require(versionFile);
+		var versionNumber = vers.version;
+		versionNumber = versionNumber + 0.01;
+	}catch(e){}
+		fs.writeFileSync(versionFile, '{ \n\t"version": ' + versionNumber + ',\n\t' + '"modified":' + d.getTime() + "\n }", "UTF-8");
+		fs.exists(zipFile, function(exists) {
+								if(exists == true) {
+									fs.unlink(zipFile);
+								}
+								  gulp.src('./'+ rootFolder +'/**')
+									.pipe(zip(zipFile))
+									.pipe(gulp.dest('./'));
+							});
+	});
 
 function logError(error) {
 

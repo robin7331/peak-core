@@ -1,8 +1,8 @@
 
-var MyPlugin = {};
+var PeakWrapper = {};
 
 
-MyPlugin.install = function (Vue, options) {
+PeakWrapper.install = function (Vue, options) {
 
    var PeakCore = require('../../index');
    var PeakCache = require('index');
@@ -18,16 +18,13 @@ MyPlugin.install = function (Vue, options) {
 
    var peakCache = peak.modules.peakBasicEvents
 
-   peakCache.getCachedJSON("awdwad");
-
-
 
    // 1. add global method or property
-   Vue.myGlobalMethod = ...
+   //Vue.myGlobalMethod = ...
    // 2. add a global asset
-   Vue.directive('my-directive', {})
+   //Vue.directive('my-directive', {})
    // 3. add an instance method
-   Vue.prototype.$myMethod = ...
+   //Vue.prototype.$myMethod = ...
 }
 
-module.exports = MyPlugin;
+module.exports = PeakWrapper;
