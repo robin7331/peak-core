@@ -1,0 +1,9 @@
+[submodule "peak-actions"]
+	path = peak-actions
+	url = https://Twittadrock@bitbucket.org/bitmechanicsgmbh/peak-actions.git
+[submodule "modules/peak-actions"]
+	path = modules/peak-actions
+	url = https://Twittadrock@bitbucket.org/bitmechanicsgmbh/peak-actions.git
+[submodule "modules/peak-cache"]
+	path = modules/peak-cache
+	url = https://Twittadrock@bitbucket.org/bitmechanicsgmbh/peak-cache.git
