@@ -1,18 +1,24 @@
-module.exports = [
-   {
-   	name: 'log',			//Mandatory (unchecked)
-   	payloadType: 'string'
-   },
-   {
-   	name: 'logError',		//Mandatory (unchecked)
-   	payloadType: 'string'
-   },
-   {
-   	name: 'onWindowLoad',	//Mandatory (unchecked)
-   	payloadType: 'none'
-   },
-   {
-   	name: 'onVueReady',		//Mandatory (unchecked)
-   	payloadType: 'none'
-   }
-]
+module.exports = {
+   'peakCore' : [
+      {
+      	name: 'log',
+      	payloadType: 'string',
+         namespace: 'peakCore'
+      },
+      {
+      	name: 'logError',
+      	payloadType: 'string',
+         namespace: 'peakCore'
+      },
+      {
+      	name: 'onWindowLoad',
+      	payloadType: 'none',
+         namespace: 'peakCore'
+      },
+      {
+      	name: 'onVueReady',
+      	payloadType: 'none',
+         namespace: 'peakCore'
+      }
+   ]
+};

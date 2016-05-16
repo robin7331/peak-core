@@ -1,6 +1,9 @@
-module.exports = [
-	{
-		name: 'enableDebug',	//Mandatory (unchecked)
-		payloadType: 'boolean'
-	}
-]
+module.exports = {
+	'peakCore' : [
+		{
+			name: 'enableDebug',	
+			payloadType: 'boolean',
+			namespace: 'peakCore'
+		}
+	]
+}

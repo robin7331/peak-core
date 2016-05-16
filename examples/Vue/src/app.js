@@ -6,15 +6,16 @@ Vue.config.debug = DEBUG;
 
 var PeakCore = require('../../../index');
 var nativeMethods = require('./config/method-definitions');
-var peak = new PeakCore(nativeMethods.native);
+var peak = new PeakCore();
 peak.config.debug = DEBUG;
-peak.makeGlobal();
+peak.makeGlobal('peak');
 
 
 var PeakModule = require('../../PeakModule');
-var peakModule = peak.installPeakModule(PeakModule)
-Vue.use(peakModule);
+var peakModule = peak.installPeakModule(PeakModule);
 
+var PeakActions = require('../../../modules/peak-actions');
+var peakActions = peak.installPeakModule(PeakActions);
 
 
 var vueTouch = require('vue-touch');
@@ -34,9 +35,29 @@ MyAPP = new Vue({
 		'list' : List
 	},
 	ready: function() {
-		this.peak.info("Hello from Vue");
+
+		var peakModule = peak.modules.peakModule;
+		var peakActions = peak.modules.peakActions;
 
 
-		this.peak.callNative("logTest", "This is a fucking Log");
+		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
+		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
+		// });
+		//
+		// peakActions.callNativeModule('openURL', 'https://www.google.de');
+		//
+		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
+		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
+		// });
+		//
+		// peakActions.openURL('https://www.google.de');
+
+
+		// peak.modules.peakModule.nativeMethod()
+
+		// this.peak.info("Hello from Vue");
+		//
+		//
+		// this.peak.callNative("logTest", "This is a fucking Log");
 	}
 });

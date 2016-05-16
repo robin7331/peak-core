@@ -13,6 +13,16 @@
 
 }
 
+- (void)callJSMethod:(NSString *)functionName inNamespace:(NSString *)namespace {
+
+//    NSString *serializedPayload = [self serializePayload:callbackPayload];
+    NSString *callbackCall = [NSString stringWithFormat:@"window.peak.callJS('%@', '%@', 'test 123');", namespace, functionName];
+
+    [self.webView evaluateJavaScript:callbackCall completionHandler:^(id o, NSError *error) {
+        NSLog(@"Callback data: %@", o);
+    }];
+}
+
 - (instancetype)initWithTarget:(id)target {
     self = [super init];
     if (self) {
@@ -51,7 +61,11 @@
             return;
         }
 
-        NSString *functionName = [msg objectForKey:@"functionName"];
+        NSDictionary *methodDefinition = msg[@"methodDefinition"];
+
+
+        NSString *namespace = methodDefinition[@"namespace"];
+        NSString *functionName = methodDefinition[@"name"];
         id payload = [msg objectForKey:@"payload"];
         NSString *callbackKey = [msg objectForKey:@"callbackKey"];
 
@@ -118,7 +132,8 @@
 }
 
 - (void)handleError:(id)message {
-    [[NSException exceptionWithName:message reason:@"" userInfo:nil] raise];
+    NSLog(message);
+//    [[NSException exceptionWithName:message reason:@"" userInfo:nil] raise];
 }
 
 

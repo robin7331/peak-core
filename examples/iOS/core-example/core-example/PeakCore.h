@@ -12,6 +12,8 @@
 @property WKWebView *webView;
 @property (nonatomic, readonly) WKWebViewConfiguration *webViewConfiguration;
 
+- (void)callJSMethod:(NSString *)functionName inNamespace:(NSString *)namespace;
+
 - (instancetype)initWithTarget:(id)target;
 
 @end

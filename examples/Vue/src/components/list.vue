@@ -61,7 +61,8 @@ module.exports = {
 	methods: {
 
 		addItem: function(){
-			this.items.push({name: "Appended"});
+			// this.items.push({name: "Appended"});
+
 
 		},
 		getUser: function(userName){
@@ -75,23 +76,8 @@ module.exports = {
 
 		clicked: function(item) {
 
-			// var basicEvents = this.peak.modules.peakBasicEvents;
-			// basicEvents.getCachedJSON("")
-			//
-			// var that = this;
-			// this.peak.callNative("callbackTest", 123, function(payload) {
-			// 	that.peak.info(payload);
-			// });
-			//
-			// window.peak.info();
-			// this.info();
-			//
-			// o
+			peak.modules.peakActions.openURL('https://www.google.de');
 
-
-			peak.helpers.isAndroid();
-
-			peak.info();
 
 
 		}

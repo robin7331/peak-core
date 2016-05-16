@@ -48,6 +48,16 @@
     NSLog(msg);
 }
 
+- (void)nativeMethod:(NSString *)msg withCallback:(void (^) (NSString *callbackPayload))callback  {
+    NSLog(@"nativeMethod: %@", msg);
+
+    callback(@"this is my native method callback payload");
+}
+
+- (void)openURL:(NSString *)url {
+    [[UIApplication sharedApplication] openURL:[[NSURL alloc] initWithString:url]];
+}
+
 
 // TODO: improve callback block (make it easier)
 - (void)callbackTest:(NSNumber *)number withCallback:(void (^) (NSString *callbackPayload))callback {
@@ -60,13 +70,15 @@
 
 - (IBAction)addItem:(id)sender {
 
-    NSString *functionName = @"addItem";
-    
-    NSString *command = [NSString stringWithFormat:@"Vue.NativeInterface.callJS('%@');", functionName];
-    
-    [self.webView evaluateJavaScript:command completionHandler:^(id o, NSError *error) {
-        NSLog(@"return val: %@", o);
-    }];
+    [self.peakCore callJSMethod:@"jsMethod" inNamespace:@"peakModule"];
+
+//    NSString *functionName = @"addItem";
+//
+//    NSString *command = [NSString stringWithFormat:@"Vue.NativeInterface.callJS('%@');", functionName];
+//
+//    [self.webView evaluateJavaScript:command completionHandler:^(id o, NSError *error) {
+//        NSLog(@"return val: %@", o);
+//    }];
 }
 
 - (IBAction)getUser:(id)sender {
