@@ -14,8 +14,12 @@ peak.makeGlobal('peak');
 var PeakModule = require('../../PeakModule');
 var peakModule = peak.installPeakModule(PeakModule);
 
-var PeakActions = require('../../../modules/peak-actions');
-var peakActions = peak.installPeakModule(PeakActions);
+// var PeakActions = require('../../../modules/peak-actions');
+// var peakActions = peak.installPeakModule(PeakActions);
+//
+
+var PeakUserland = require('../../peak-userland');
+var peakUserland = peak.installPeakModule(PeakUserland, {});
 
 
 var vueTouch = require('vue-touch');
@@ -37,7 +41,13 @@ MyAPP = new Vue({
 	ready: function() {
 
 		var peakModule = peak.modules.peakModule;
-		var peakActions = peak.modules.peakActions;
+		// var peakActions = peak.modules.peakActions;
+		//
+		//
+
+		peak.modules.peakUserland.publish('setNavBarTitle', this.setNavBarTitle);
+
+		// this.peak.publishFunction('')
 
 
 		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
@@ -59,5 +69,11 @@ MyAPP = new Vue({
 		//
 		//
 		// this.peak.callNative("logTest", "This is a fucking Log");
+	},
+
+	methods: {
+		setNavBarTitle: function(title) {
+			this.info("setting nav bar title");
+		}
 	}
 });

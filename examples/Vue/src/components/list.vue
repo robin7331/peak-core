@@ -76,7 +76,7 @@ module.exports = {
 
 		clicked: function(item) {
 
-			peak.modules.peakActions.openURL('https://www.google.de');
+			// peak.modules.peakActions.openURL('https://www.google.de');
 
 
 
