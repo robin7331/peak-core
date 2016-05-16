@@ -1,17 +1,14 @@
 module.exports = {
-   native: [
+	'native' : [
+		{
+			name: 'setTitleNative',
+			payloadType: 'string'
+		}
+   	],
+   'js' : [
       {
-      	name: 'setNavigationBarTitle',			//Mandatory (unchecked)
-      	payloadType: 'string'
-      },
-      {
-      	name: 'logTest',			//Mandatory (unchecked)
-      	payloadType: 'string'
-      },
-      {
-         name: 'callbackTest',
-         payloadType: 'number',
-         callbackDataType: 'string'
+         name: 'setTitleJS',
+         payloadType: 'object'
       }
    ]
-}
+};

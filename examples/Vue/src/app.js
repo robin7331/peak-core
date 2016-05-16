@@ -5,23 +5,22 @@ Vue.config.devtools = DEBUG;
 Vue.config.debug = DEBUG;
 
 var PeakCore = require('../../../index');
-var nativeMethods = require('./config/method-definitions');
 var peak = new PeakCore();
 peak.config.debug = DEBUG;
 peak.makeGlobal('peak');
+ 
 
+//var PeakModule = require('../../PeakModule');
+//var peakModule = peak.useModule(PeakModule);
 
-var PeakModule = require('../../PeakModule');
-var peakModule = peak.installPeakModule(PeakModule);
+//var PeakActions = require('../../../modules/peak-actions');
+//var peakActions = peak.useModule(PeakActions);
 
-// var PeakActions = require('../../../modules/peak-actions');
-// var peakActions = peak.installPeakModule(PeakActions);
-//
-
-var PeakUserland = require('../../peak-userland');
-var peakUserland = peak.installPeakModule(PeakUserland, {});
-
-
+var UserlandMethods = require('./config/method-definitions');
+var PeakUserland = require('../../../modules/peak-userland'); 
+var peakUserland = peak.useModule(PeakUserland, UserlandMethods);
+ 
+ 
 var vueTouch = require('vue-touch');
 var options = {};
 Vue.use(vueTouch, options);
@@ -31,7 +30,7 @@ var jQuery = require("jQuery");
 var List = require('./components/list.vue');
 
 MyAPP = new Vue({
-	el: '#app',
+	el: '#app', 
 	data: {
 
 	},
@@ -40,15 +39,17 @@ MyAPP = new Vue({
 	},
 	ready: function() {
 
-		var peakModule = peak.modules.peakModule;
-		// var peakActions = peak.modules.peakActions;
-		//
-		//
+		//var peakModule = peak.modules.peakModule;
+		// var peak Actions = peak.modules.peakActions;
+		    
+		  
 
-		peak.modules.peakUserland.publish('setNavBarTitle', this.setNavBarTitle);
+		peak.modules.peakUserland.bind('setTitleJS', this.setTitleJS);
+			 	  
+		peak.modules.peakUserland.setTitleNative('Test'); 
 
 		// this.peak.publishFunction('')
-
+ 
 
 		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
 		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
@@ -59,7 +60,7 @@ MyAPP = new Vue({
 		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
 		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
 		// });
-		//
+		// 
 		// peakActions.openURL('https://www.google.de');
 
 
@@ -72,8 +73,8 @@ MyAPP = new Vue({
 	},
 
 	methods: {
-		setNavBarTitle: function(title) {
-			this.info("setting nav bar title");
+		setTitleJS: function(title) {
+			this.info("calling peak-userlandJS");
 		}
 	}
 });

@@ -52,12 +52,13 @@ gulp.task('watch', function(){
   gulp.watch( INPUT_DIR + '/css/**/*.css', ['_css','_syncReload']);
   gulp.watch( INPUT_DIR + '/scss/**/*.scss', ['_sass','_syncReload']);
   gulp.watch( INPUT_DIR + '/js/**/*.js', ['_js','_syncReload']);
-  gulp.watch( INPUT_DIR + '/*.js', ['_vue','_syncReload']);
-  gulp.watch( INPUT_DIR + '/vue/**/*.*', ['_vue','_syncReload']);
+  gulp.watch( INPUT_DIR + '/**/*.js', ['_vue','_syncReload']);
+  gulp.watch( INPUT_DIR + '/**/**/*.vue', ['_vue','_syncReload']);
   gulp.watch( INPUT_DIR + '/*.html', ['_html','_syncReload']);
 });
 
 gulp.task('sync', function(){
+	var rootFolder = OUTPUT_DIR.substr(0,OUTPUT_DIR.lastIndexOf("/"));
 	browserSync({
 		 files: [
 		 	OUTPUT_DIR + '/**/*.js',
@@ -66,7 +67,7 @@ gulp.task('sync', function(){
 		 	OUTPUT_DIR + '/*.html'
 		 ],
 		 server: {
-		 	baseDir: OUTPUT_DIR + ''
+		 	baseDir: rootFolder + ''
 		 },
 		 proxy: false,
 		 open: false
