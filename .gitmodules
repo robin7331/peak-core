@@ -1,0 +1,9 @@
+[submodule "modules/peak-actions"]
+	path = modules/peak-actions
+	url = https://bitbucket.org/bitmechanicsgmbh/peak-actions.git
+[submodule "modules/peak-cache"]
+	path = modules/peak-cache
+	url = https://bitbucket.org/bitmechanicsgmbh/peak-cache.git
+[submodule "modules/peak-userland"]
+	path = modules/peak-userland
+	url = https://bitbucket.org/bitmechanicsgmbh/peak-userland.git
