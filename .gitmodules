@@ -6,4 +6,4 @@
 	url = https://bitbucket.org/bitmechanicsgmbh/peak-cache.git
 [submodule "modules/peak-userland"]
 	path = modules/peak-userland
-	url = https://Twittadrock@bitbucket.org/bitmechanicsgmbh/peak-userland.git
+	url = https://bitbucket.org/bitmechanicsgmbh/peak-userland.git
