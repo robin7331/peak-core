@@ -3,6 +3,11 @@ var pjson = require('../package.json');
 var config = {};
 
 /**
+ * Defines the Peak Core Name
+ */
+config.name = "peak-core";
+
+/**
  * Defines if the debugging mode is turned on
  * @type {Boolean}
  */
@@ -12,7 +17,7 @@ config.debug = true;
  * Used as prefix for console outputs.
  * @param {String}
  */
-config.consoleTag = "PEAK Core (" + pjson.version + ")";
+config.consoleTag = config.name + " (" + pjson.version + ")";
 
 /**
  * Method definitions for native methods.
@@ -25,6 +30,14 @@ config.nativeMethods = require('./required-native-methods');
  * @param  {array} An array of method definitions.
  */
 config.JSMethods = require('./required-js-methods');
+
+/**
+ * Default configuration for modules that do not have an own <<Module>>.config object
+ */
+config.defaultModuleConfig = {
+    skipJSMethodValidationOnInstall : false,
+    generateFunctionStubs : false
+}
 
 
 module.exports = config;
