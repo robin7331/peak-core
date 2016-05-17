@@ -67,7 +67,7 @@ gulp.task('sync', function(){
 		 	OUTPUT_DIR + '/*.html'
 		 ],
 		 server: {
-		 	baseDir: rootFolder + ''
+		 	baseDir: OUTPUT_DIR
 		 },
 		 proxy: false,
 		 open: false

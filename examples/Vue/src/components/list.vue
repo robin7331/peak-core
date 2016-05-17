@@ -61,9 +61,7 @@ module.exports = {
 	methods: {
 
 		addItem: function(){
-			// this.items.push({name: "Appended"});
-
-
+			// this.items.push({name: "Appended"})
 		},
 		getUser: function(userName){
 			var user = {

@@ -3,13 +3,19 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/core-example/iOSNative.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore.m" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/core-example/AppDelegate.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/core-example/ViewController.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/AppDelegate.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/core-example/main.m" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/core-example/Info.plist" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/core-example/Assets.xcassets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/Info.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/PeakModule.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/PeakCore.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/PeakModule.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/Models/MethodDefinition.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/Models/MethodDefinition.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/Models/NativeCall.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/Models/NativeCall.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/core-example/PeakCore/PeakCore.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/core-example/iOSNative.m" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/core-example/ViewController.m" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/core-example/AppDelegate.m" isTestSource="false" />
