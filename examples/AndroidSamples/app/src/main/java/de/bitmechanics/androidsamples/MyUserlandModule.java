@@ -94,7 +94,6 @@ public class MyUserlandModule extends UserlandModule {
         callJS("getUser", userName, new ISimpleCallback() {
             @Override
             public void call(String payload) {
-                PEAK_CONTEXT.logPayload(TAG,"getUserCallback",payload,null);
                 makeJSONObj(payload);
             }
         });
