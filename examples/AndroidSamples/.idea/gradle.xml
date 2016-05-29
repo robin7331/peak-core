@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$/../../../peak-core-android/peakactionsandroid" />
             <option value="$PROJECT_DIR$/../../../peak-core-android/peakcacheandroid" />
             <option value="$PROJECT_DIR$/../../../peak-core-android/peakcoreandroid" />
+            <option value="$PROJECT_DIR$/../../../peak-core-android/peakuserlandandroid" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>
@@ -19,6 +20,7 @@
             <option value="$PROJECT_DIR$/../../../peak-core-android/peakactionsandroid" />
             <option value="$PROJECT_DIR$/../../../peak-core-android/peakcacheandroid" />
             <option value="$PROJECT_DIR$/../../../peak-core-android/peakcoreandroid" />
+            <option value="$PROJECT_DIR$/../../../peak-core-android/peakuserlandandroid" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>

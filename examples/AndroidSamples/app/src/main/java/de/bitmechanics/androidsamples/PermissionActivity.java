@@ -1,6 +1,6 @@
 package de.bitmechanics.androidsamples;
 
-import de.bitmechanics.peakandroid.utils.RequestPermissionsActivity;
+import de.bitmechanics.peakcoreandroid.utils.RequestPermissionsActivity;
 
 public class PermissionActivity extends RequestPermissionsActivity {
 

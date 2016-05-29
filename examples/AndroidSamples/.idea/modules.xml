@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/../../../peak-core-android/peakactionsandroid/peakactionsandroid.iml" filepath="$PROJECT_DIR$/../../../peak-core-android/peakactionsandroid/peakactionsandroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../peak-core-android/peakcacheandroid/peakcacheandroid.iml" filepath="$PROJECT_DIR$/../../../peak-core-android/peakcacheandroid/peakcacheandroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../peak-core-android/peakcoreandroid/peakcoreandroid.iml" filepath="$PROJECT_DIR$/../../../peak-core-android/peakcoreandroid/peakcoreandroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../peak-core-android/peakuserlandandroid/peakuserlandandroid.iml" filepath="$PROJECT_DIR$/../../../peak-core-android/peakuserlandandroid/peakuserlandandroid.iml" />
     </modules>
   </component>
 </project>
