@@ -44,52 +44,17 @@
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://192.168.0.14:3000/"]]];
 }
 
--(void)logTest:(NSString *)msg {
-    NSLog(msg);
-}
-
-- (void)nativeMethod:(NSString *)msg withCallback:(void (^) (NSString *callbackPayload))callback  {
-    NSLog(@"nativeMethod: %@", msg);
-
-    callback(@"this is my native method callback payload");
-}
-
 - (void)openURL:(NSString *)url {
     [[UIApplication sharedApplication] openURL:[[NSURL alloc] initWithString:url]];
 }
 
 
-// TODO: improve callback block (make it easier)
-- (void)callbackTest:(NSNumber *)number withCallback:(void (^) (NSString *callbackPayload))callback {
-
-    callback(@"it works");
-
-}
-
-// TODO: implement callJS functionality to PeakCore
-
 - (IBAction)addItem:(id)sender {
 
-    [self.peakCore callJSMethod:@"jsMethod" inNamespace:@"peakModule"];
-
-//    NSString *functionName = @"addItem";
-//
-//    NSString *command = [NSString stringWithFormat:@"Vue.NativeInterface.callJS('%@');", functionName];
-//
-//    [self.webView evaluateJavaScript:command completionHandler:^(id o, NSError *error) {
-//        NSLog(@"return val: %@", o);
-//    }];
-}
-
-- (IBAction)getUser:(id)sender {
-    NSString *functionName = @"getUser";
-    NSString *payload = @"Matze";
-    
-    NSString *command = [NSString stringWithFormat:@"Vue.NativeInterface.callJS('%@', '%@');", functionName, payload];
-    
-    [self.webView evaluateJavaScript:command completionHandler:^(id o, NSError *error) {
-        NSLog(@"return val: %@", o);
+    [self.peakCore callJSFunctionName:@"setNavBarTitle" inNamespace:@"peakUserland" withPayload:@"WAS GEHT AB?" andCallback:^(id callbackPayload) {
+        NSLog(@"cb: %@", callbackPayload);
     }];
+
 }
 
 

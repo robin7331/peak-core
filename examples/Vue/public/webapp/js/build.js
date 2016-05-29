@@ -23142,19 +23142,16 @@ var PeakCore = require('../../../index');
 var peak = new PeakCore();
 peak.config.debug = DEBUG;
 peak.makeGlobal('peak');
- 
 
-//var PeakModule = require('../../PeakModule');
-//var peakModule = peak.useModule(PeakModule);
 
-//var PeakActions = require('../../../modules/peak-actions');
-//var peakActions = peak.useModule(PeakActions);
+// var PeakActions = require('../../../modules/peak-actions');
+// var peakActions = peak.installPeakModule(PeakActions);
+//
+var methods = require('./config/method-definitions');
+var PeakUserland = require('../../../modules/peak-userland');
+var peakUserland = peak.useModule(PeakUserland, methods);
 
-var UserlandMethods = require('./config/method-definitions');
-var PeakUserland = require('../../../modules/peak-userland'); 
-var peakUserland = peak.useModule(PeakUserland, UserlandMethods);
- 
- 
+
 var vueTouch = require('vue-touch');
 var options = {};
 Vue.use(vueTouch, options);
@@ -23164,7 +23161,7 @@ var jQuery = require("jQuery");
 var List = require('./components/list.vue');
 
 MyAPP = new Vue({
-	el: '#app', 
+	el: '#app',
 	data: {
 
 	},
@@ -23173,42 +23170,33 @@ MyAPP = new Vue({
 	},
 	ready: function() {
 
-		//var peakModule = peak.modules.peakModule;
-		// var peak Actions = peak.modules.peakActions;
-		    
-		  
-
-		peak.modules.peakUserland.bind('setTitleJS', this.setTitleJS);
-			 	  
-		peak.modules.peakUserland.setTitleNative('Test'); 
-
-		// this.peak.publishFunction('')
- 
-
-		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
-		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
+		// peak.modules.peakUserland.bind('callbackTest', 101, function(data) {
+		// 	peak.info("callback: " + data);
 		// });
-		//
-		// peakActions.callNativeModule('openURL', 'https://www.google.de');
-		//
-		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
-		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
-		// });
-		// 
-		// peakActions.openURL('https://www.google.de');
 
+		// peak.modules.peakUserland.callbackTest(101, function(data) {
+		// 		peak.info("callback: " + data);
+		// })
 
-		// peak.modules.peakModule.nativeMethod()
+		// peak.callNative('peakUserland', 'callbackTest', 101, function(data) {
+		// 		peak.info("callback: " + data);
+		// })
+		//
+		// th
 
-		// this.peak.info("Hello from Vue");
+		// peak.info("test 123");
 		//
 		//
-		// this.peak.callNative("logTest", "This is a fucking Log");
+
+		peak.modules.peakUserland.bind('setNavBarTitle', this.setNavBarTitle);
+
 	},
 
+
 	methods: {
-		setTitleJS: function(title) {
-			this.info("calling peak-userlandJS");
+		setNavBarTitle: function(title) {
+			peak.info("setting nav bar title to " + title);
+			return "hi";
 		}
 	}
 });
@@ -23238,7 +23226,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "E:\\_SYMLINKED\\_WORKPLACE\\workplace\\peak-core\\examples\\Vue\\src\\components\\list-item.vue"
+  var id = "/Users/robin/Documents/Firma/Laufende Projekte/BitMechanics/bm-peak/peak-core/examples/Vue/src/components/list-item.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["/* line 2, stdin */\n.list-item {\n  background-color: green;\n  min-height: 100px;\n  margin: 15px;\n  width: 100%; }\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -23277,8 +23265,7 @@ module.exports = {
 	methods: {
 
 		addItem: function addItem() {
-			// this.items.push({name: "Appended"});
-
+			// this.items.push({name: "Appended"})
 		},
 		getUser: function getUser(userName) {
 			var user = {
@@ -23302,7 +23289,7 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  var id = "E:\\_SYMLINKED\\_WORKPLACE\\workplace\\peak-core\\examples\\Vue\\src\\components\\list.vue"
+  var id = "/Users/robin/Documents/Firma/Laufende Projekte/BitMechanics/bm-peak/peak-core/examples/Vue/src/components/list.vue"
   module.hot.dispose(function () {
     require("vueify-insert-css").cache["/* line 4, stdin */\n.list .container {\n  margin: 0px auto;\n  width: 100%;\n  /* OLD - iOS 6-, Safari 3.1-6, BB7 */\n  display: -ms-flexbox;\n  /* TWEENER - IE 10 */\n  /* NEW - Safari 6.1+. iOS 7.1+, BB10 */\n  display: flex;\n  /* NEW, Spec - Firefox, Chrome, Opera */\n  -ms-flex-direction: column;\n      flex-direction: column;\n  -ms-flex-align: center;\n      align-items: center;\n  padding: 0 0;\n  background-color: #FFF; }\n"] = false
     document.head.removeChild(__vueify_style__)
@@ -23315,19 +23302,29 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"./list-item.vue":12,"vue":9,"vue-hot-reload-api":7,"vueify-insert-css":10}],14:[function(require,module,exports){
 module.exports = {
-	'native' : [
-		{
-			name: 'setTitleNative',
-			payloadType: 'string'
-		}
-   	],
-   'js' : [
+   native: [
       {
-         name: 'setTitleJS',
-         payloadType: 'object'
+      	name: 'logTest',			//Mandatory (unchecked)
+      	payloadType: 'string'
+      },
+      {
+         name: 'callbackTest',
+         payloadType: 'number',
+         callback: {
+            callbackDataType: 'string'
+         }
+      }
+   ],
+   js: [
+      {
+         name: 'setNavBarTitle',			//Mandatory (unchecked)
+         payloadType: 'string',
+         callback: {
+            callbackDataType: 'string'
+         }
       }
    ]
-};
+}
 
 },{}],15:[function(require,module,exports){
 "use strict";
@@ -23459,7 +23456,7 @@ var Core = function PeakCore() {
 	 * @type {object}
 	 */
 	this.helpers = Helpers;
-	
+
 	/**
 	 * A Logger instance for logging messages to the native console
 	 * @type {Logger}
@@ -23504,14 +23501,14 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 	}
 
 	var module = new ModuleClass(this, customData);
-	
+
 
 	if (module.packageJSON === undefined) {
 		this.error("Module has no packageJSON property defined!");
 		return;
 	}
 	var packageJSON = module.packageJSON;
-	
+
 	if (typeof(module.config) == 'undefined') {
 		module.config = this.config.defaultModuleConfig;
 	}else{
@@ -23521,7 +23518,7 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 			}
 		}
 	}
-	
+
 	var packageJSON = module.packageJSON;
 
 	// get the plain module name without "@bitmechanics/".
@@ -23551,7 +23548,7 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 	module._callNative = function(functionName, payload, callback) {
 	   this.peak.callNative(moduleNameSpace, functionName, payload, callback);
 	};
-	
+
 	for (var i = 0; i < module.nativeMethods.length; i++) {
 		var definition = module.nativeMethods[i];
 		if (typeof(definition.namespace) == 'undefined') {
@@ -23568,7 +23565,7 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 	}
 	var nativeMethodsObj = {};
 	nativeMethodsObj[moduleNameSpace] = module.nativeMethods;
-	
+
 	for (var i = 0; i < module.JSMethods.length; i++) {
 		var definition = module.JSMethods[i];
 		if (typeof(definition.namespace) == 'undefined') {
@@ -23593,19 +23590,19 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 		this.info("JSMethods: " + JSON.stringify(this.config.JSMethods, null, 4));
 	}
 
-	var infoMsg = "Module " + moduleName + " with version " + packageJSON.version + " was installed\n" 
+	var infoMsg = "Module " + moduleName + " with version " + packageJSON.version + " was installed\n"
 						+ 'with configuration: ' + JSON.stringify(module.config,null,4);
 
 	this.info(infoMsg);
 
 	module._info = function(msg) {
-		this.peak.info(msg,moduleName);	
+		this.peak.info(msg,moduleName);
 	};
-	
+
 	module._error = function(msg) {
-		this.peak.error(msg,moduleName);	
+		this.peak.error(msg,moduleName);
 	};
-	
+
 	module.name = moduleName;
 	module.namespace = moduleNameSpace;
 
@@ -23648,8 +23645,12 @@ Core.prototype.callJS = function(namespace, functionName, payload, nativeCallbac
 
 	var module = this.modules[namespace];
 
-	//Check if this function was published
 	var callbackData = module[functionName](payload);
+
+	// skip the rest if we dont need a callback
+	if (typeof(JSMethodDefinition.callback) == 'undefined') {
+		return;
+	}
 
 	if (privateHelpers.isCallbackDataValidForMethodDefinition(JSMethodDefinition, callbackData) == false) {
 		return;
@@ -23875,12 +23876,12 @@ PrivateHelpers.prototype.isCallbackDataValidForMethodDefinition = function(JSMet
 
    var callbackDefinition = JSMethodDefinition.callback;
 
-   if (callbackDefinition === undefined && jsonData) {
+   if (typeof(callbackDefinition) == 'undefined' && jsonData) {
       this.core.logger.error(JSMethodDefinition.namespace + "/" + JSMethodDefinition.name + ' has no defined callback in it\'s method definition.');
       return false;
    }
 
-	if (callbackDefinition.callbackData === undefined && jsonData === undefined) {
+	if (typeof(callbackDefinition.callbackData) == 'undefined' && typeof(jsonData) == 'undefined') {
 		return true;
 	}
 
@@ -24022,7 +24023,7 @@ var config = {
 module.exports = config;
 },{}],21:[function(require,module,exports){
 module.exports={
-  "name": "peak-userland",
+  "name": "@bitmechanics/peak-userland",
   "version": "1.0.0",
   "description": "",
   "main": "peak-userland.js",
@@ -24038,7 +24039,7 @@ var PeakModule = function (peak, customData) {
    this.config = require('./config');
    this.peak = peak;
    this.nativeMethods = customData.native;
-   this.JSMethods = customData.js; 
+   this.JSMethods = customData.js;
 }
 
 
@@ -24059,7 +24060,7 @@ PeakModule.prototype.bind = function(functionName, func){
 	//Register a callable JS Function that simply broadcasts an event that has the same name as the function
 	this[functionName] = func;
 	if(this.peak.config.debug){
-		this._info(functionName + "() has been binded to peak-userland!")
+		this._info(functionName + "() has been binded to " + this.name);
 	}
 };
 

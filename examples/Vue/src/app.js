@@ -8,19 +8,16 @@ var PeakCore = require('../../../index');
 var peak = new PeakCore();
 peak.config.debug = DEBUG;
 peak.makeGlobal('peak');
- 
 
-//var PeakModule = require('../../PeakModule');
-//var peakModule = peak.useModule(PeakModule);
 
-//var PeakActions = require('../../../modules/peak-actions');
-//var peakActions = peak.useModule(PeakActions);
+// var PeakActions = require('../../../modules/peak-actions');
+// var peakActions = peak.installPeakModule(PeakActions);
+//
+var methods = require('./config/method-definitions');
+var PeakUserland = require('../../../modules/peak-userland');
+var peakUserland = peak.useModule(PeakUserland, methods);
 
-var UserlandMethods = require('./config/method-definitions');
-var PeakUserland = require('../../../modules/peak-userland'); 
-var peakUserland = peak.useModule(PeakUserland, UserlandMethods);
- 
- 
+
 var vueTouch = require('vue-touch');
 var options = {};
 Vue.use(vueTouch, options);
@@ -30,7 +27,7 @@ var jQuery = require("jQuery");
 var List = require('./components/list.vue');
 
 MyAPP = new Vue({
-	el: '#app', 
+	el: '#app',
 	data: {
 
 	},
@@ -39,42 +36,33 @@ MyAPP = new Vue({
 	},
 	ready: function() {
 
-		//var peakModule = peak.modules.peakModule;
-		// var peak Actions = peak.modules.peakActions;
-		    
-		  
-
-		peak.modules.peakUserland.bind('setTitleJS', this.setTitleJS);
-			 	  
-		peak.modules.peakUserland.setTitleNative('Test'); 
-
-		// this.peak.publishFunction('')
- 
-
-		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
-		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
+		// peak.modules.peakUserland.bind('callbackTest', 101, function(data) {
+		// 	peak.info("callback: " + data);
 		// });
-		//
-		// peakActions.callNativeModule('openURL', 'https://www.google.de');
-		//
-		// peakModule.callNativeModule('nativeMethod', 'native function payload', function(callbackPayload) {
-		// 	peak.info("nativeMethodCallbackPayload: " + callbackPayload);
-		// });
-		// 
-		// peakActions.openURL('https://www.google.de');
 
+		// peak.modules.peakUserland.callbackTest(101, function(data) {
+		// 		peak.info("callback: " + data);
+		// })
 
-		// peak.modules.peakModule.nativeMethod()
+		// peak.callNative('peakUserland', 'callbackTest', 101, function(data) {
+		// 		peak.info("callback: " + data);
+		// })
+		//
+		// th
 
-		// this.peak.info("Hello from Vue");
+		// peak.info("test 123");
 		//
 		//
-		// this.peak.callNative("logTest", "This is a fucking Log");
+
+		peak.modules.peakUserland.bind('setNavBarTitle', this.setNavBarTitle);
+
 	},
 
+
 	methods: {
-		setTitleJS: function(title) {
-			this.info("calling peak-userlandJS");
+		setNavBarTitle: function(title) {
+			peak.info("setting nav bar title to " + title);
+			return "hi";
 		}
 	}
 });
