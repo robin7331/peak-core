@@ -22,7 +22,7 @@ public class MyUserlandModule extends UserlandModule {
     public MyUserlandModule() {
         super();
 
-        MODULE_METHODS.put("itemClicked", new BaseCallable<String>() {
+        MODULE_METHODS.put("itemClicked", new BaseCallable<String, Void>() {
 
             @Override
             public Void call() throws Exception {
@@ -32,7 +32,7 @@ public class MyUserlandModule extends UserlandModule {
 
         });
 
-        MODULE_METHODS.put("setTitle", new BaseCallable<String>() {
+        MODULE_METHODS.put("setTitle", new BaseCallable<String, Void>() {
 
             @Override
             public Void call() throws Exception {
@@ -42,7 +42,7 @@ public class MyUserlandModule extends UserlandModule {
 
         });
 
-        MODULE_METHODS.put("getPosition", new BaseCallable<Float>() {
+        MODULE_METHODS.put("getPosition", new BaseCallable<Double,JSONObject>() {
 
             @Override
             public Void call() throws Exception {
@@ -52,7 +52,7 @@ public class MyUserlandModule extends UserlandModule {
 
         });
 
-        MODULE_METHODS.put("getPositionString", new BaseCallable<Float>() {
+        MODULE_METHODS.put("getPositionString", new BaseCallable<Double,String>() {
 
             @Override
             public Void call() throws Exception {
@@ -64,7 +64,7 @@ public class MyUserlandModule extends UserlandModule {
     }
 
     public void itemClicked(String payload) {
-        Log.e(TAG, PEAK_CONTEXT.makeJSON(payload).toString());
+        Log.e(TAG, makeJSONObj(payload).toString());
     }
 
     public void setTitle(String payload) {
@@ -72,7 +72,7 @@ public class MyUserlandModule extends UserlandModule {
     }
 
 
-    public void getPosition(float payload, final BaseCallback<JSONObject> callback) throws Exception {
+    public void getPosition(double payload, final BaseCallback<JSONObject> callback) throws Exception {
         JSONObject retval = new JSONObject();
         try {
             retval.put("longitude", 13.3);
@@ -84,24 +84,24 @@ public class MyUserlandModule extends UserlandModule {
         callback.call();
     }
 
-    public void getPositionString(float payload, final BaseCallback<String> callback) throws Exception {
+    public void getPositionString(double payload, final BaseCallback<String> callback) throws Exception {
         callback.setPayload("My Position");
         callback.call();
     }
 
     public void getUser(String userName){
 
-        PEAK_CONTEXT.callJS("getUser", userName, new ISimpleCallback() {
+        callJS("getUser", userName, new ISimpleCallback() {
             @Override
             public void call(String payload) {
                 PEAK_CONTEXT.logPayload(TAG,"getUserCallback",payload,null);
-                JSONObject retval = PEAK_CONTEXT.makeJSON(payload);
+                makeJSONObj(payload);
             }
         });
     }
 
     public void addItem(){
-        PEAK_CONTEXT.callJS("addItem");
+        callJS("addItem");
     }
 
 
