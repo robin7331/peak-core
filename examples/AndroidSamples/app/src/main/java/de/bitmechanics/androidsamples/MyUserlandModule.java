@@ -1,6 +1,5 @@
 package de.bitmechanics.androidsamples;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -22,7 +21,7 @@ public class MyUserlandModule extends UserlandModule {
     public MyUserlandModule() {
         super();
 
-        MODULE_METHODS.put("itemClicked", new BaseCallable<String, Void>() {
+        MODULE_JS_METHODS.put("itemClicked", new BaseCallable<String, Void>() {
 
             @Override
             public Void call() throws Exception {
@@ -32,7 +31,7 @@ public class MyUserlandModule extends UserlandModule {
 
         });
 
-        MODULE_METHODS.put("setTitle", new BaseCallable<String, Void>() {
+        MODULE_JS_METHODS.put("setTitle", new BaseCallable<String, Void>() {
 
             @Override
             public Void call() throws Exception {
@@ -42,7 +41,7 @@ public class MyUserlandModule extends UserlandModule {
 
         });
 
-        MODULE_METHODS.put("getPosition", new BaseCallable<Double,JSONObject>() {
+        MODULE_JS_METHODS.put("getPosition", new BaseCallable<Double,JSONObject>() {
 
             @Override
             public Void call() throws Exception {
@@ -52,7 +51,7 @@ public class MyUserlandModule extends UserlandModule {
 
         });
 
-        MODULE_METHODS.put("getPositionString", new BaseCallable<Double,String>() {
+        MODULE_JS_METHODS.put("getPositionString", new BaseCallable<Double,String>() {
 
             @Override
             public Void call() throws Exception {

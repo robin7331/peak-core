@@ -7,6 +7,7 @@ import android.webkit.WebView;
 
 import de.bitmechanics.peakcoreandroid.core.PeakCore;
 import de.bitmechanics.peakcoreandroid.module.CoreModule;
+import de.bitmechanics.peakcoreandroid.module.LoaderModule;
 import de.bitmechanics.peakcoreandroid.utils.WebViewUtils;
 
 public class MainActivity extends Activity {
@@ -32,10 +33,14 @@ public class MainActivity extends Activity {
                     Log.d(TAG, "onVueReady() called!");
             }
         });
-
-        peak.useModule(new MyUserlandModule());
         peak.getCoreModule().enableDebug(true);
 
-        WebViewUtils.loadWebApp(wv,"webapp",getCacheDir(),true);
+        MyUserlandModule userland = new MyUserlandModule();
+        peak.useModule(userland);
+
+        LoaderModule loader = new LoaderModule();
+        peak.useModule(loader);
+
+        loader.loadWebApp(wv,"webapp",getCacheDir(),true);
     }
 }
