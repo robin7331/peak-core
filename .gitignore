@@ -1,3 +1,4 @@
 node_modules/
 examples/Vue/node_modules/
 examples/Vue/public/
+npm-debug.log
