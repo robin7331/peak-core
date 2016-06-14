@@ -15,9 +15,11 @@
 		00F380A31CE0A025008145AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00F380A11CE0A025008145AB /* LaunchScreen.storyboard */; };
 		00F380AC1CE0A072008145AB /* iOSNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 00F380AB1CE0A072008145AB /* iOSNative.m */; };
 		67A6915D44979D70F54E7092 /* PeakCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 67A6905B4BACED098B03A8CC /* PeakCore.m */; };
+		67A693DB3D7539BAE5F616EF /* PeakWebViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 67A6903431BFE3761321C7A9 /* PeakWebViewContainer.m */; };
 		67A693F84A09CD2046E50EF5 /* PeakModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 67A69E82D46D143577F81D09 /* PeakModule.m */; };
 		67A6980ED53D2DA930AA4E7B /* NativeCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 67A6972E9D9182415539DBB5 /* NativeCall.m */; };
 		67A69BE47BABD37DF1950F13 /* MethodDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 67A69372B2F76A24126AEE14 /* MethodDefinition.m */; };
+		67A69DDD8A695C0BEF90AF6E /* PeakUserland.m in Sources */ = {isa = PBXBuildFile; fileRef = 67A69E01D3739DCA18758434 /* PeakUserland.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,13 +35,17 @@
 		00F380A41CE0A025008145AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00F380AA1CE0A071008145AB /* iOSNative.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSNative.h; sourceTree = "<group>"; };
 		00F380AB1CE0A072008145AB /* iOSNative.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iOSNative.m; sourceTree = "<group>"; };
+		67A6903431BFE3761321C7A9 /* PeakWebViewContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeakWebViewContainer.m; sourceTree = "<group>"; };
 		67A6905B4BACED098B03A8CC /* PeakCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeakCore.m; sourceTree = "<group>"; };
 		67A69372B2F76A24126AEE14 /* MethodDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MethodDefinition.m; sourceTree = "<group>"; };
 		67A6941664CE7DB3921E9AAA /* MethodDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MethodDefinition.h; sourceTree = "<group>"; };
 		67A696B7E7C1CEE0BC0C435F /* PeakCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeakCore.h; sourceTree = "<group>"; };
 		67A6972E9D9182415539DBB5 /* NativeCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeCall.m; sourceTree = "<group>"; };
 		67A69788590964F6BE2D026D /* NativeCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeCall.h; sourceTree = "<group>"; };
+		67A69801B664999EFE4730AD /* PeakUserland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeakUserland.h; sourceTree = "<group>"; };
+		67A698114AE8D2D65A35B6FE /* PeakWebViewContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeakWebViewContainer.h; sourceTree = "<group>"; };
 		67A69A4EA68B5B4748A4E007 /* PeakModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeakModule.h; sourceTree = "<group>"; };
+		67A69E01D3739DCA18758434 /* PeakUserland.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeakUserland.m; sourceTree = "<group>"; };
 		67A69E82D46D143577F81D09 /* PeakModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeakModule.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,6 +91,8 @@
 				00F380AA1CE0A071008145AB /* iOSNative.h */,
 				00F380AB1CE0A072008145AB /* iOSNative.m */,
 				67A6960453658A1352B399CB /* PeakCore */,
+				67A69E01D3739DCA18758434 /* PeakUserland.m */,
+				67A69801B664999EFE4730AD /* PeakUserland.h */,
 			);
 			path = "core-example";
 			sourceTree = "<group>";
@@ -116,6 +124,8 @@
 				67A69366D006408BB2710D21 /* Models */,
 				67A69E82D46D143577F81D09 /* PeakModule.m */,
 				67A69A4EA68B5B4748A4E007 /* PeakModule.h */,
+				67A6903431BFE3761321C7A9 /* PeakWebViewContainer.m */,
+				67A698114AE8D2D65A35B6FE /* PeakWebViewContainer.h */,
 			);
 			path = PeakCore;
 			sourceTree = "<group>";
@@ -198,6 +208,8 @@
 				67A69BE47BABD37DF1950F13 /* MethodDefinition.m in Sources */,
 				67A6980ED53D2DA930AA4E7B /* NativeCall.m in Sources */,
 				67A693F84A09CD2046E50EF5 /* PeakModule.m in Sources */,
+				67A69DDD8A695C0BEF90AF6E /* PeakUserland.m in Sources */,
+				67A693DB3D7539BAE5F616EF /* PeakWebViewContainer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

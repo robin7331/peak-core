@@ -6,14 +6,17 @@
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
+@class PeakModule;
+
 typedef void (^PeakCoreCallback)(id callbackPayload);
 
 @interface PeakCore : NSObject
 
 @property WKWebView *webView;
 @property (nonatomic, readonly) WKWebViewConfiguration *webViewConfiguration;
+@property NSMutableDictionary <NSString *, PeakModule *> *modules;
 
-- (instancetype)initWithTarget:(id)target;
+- (id)useModule:(Class)moduleClass;
 
 - (void)callJSFunctionName:(NSString *)functionName inNamespace:(NSString *)namespace;
 - (void)callJSFunctionName:(NSString *)functionName inNamespace:(NSString *)namespace withPayload:(id)payload;

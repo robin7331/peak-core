@@ -8,12 +8,15 @@
 
 #import "ViewController.h"
 #import "PeakCore.h"
+#import "PeakModule.h"
+#import "PeakUserland.h"
+#import "PeakWebViewContainer.h"
 
 @interface ViewController ()
 
 @property WKWebView *webView;
-@property PeakCore *peakCore;
-
+@property PeakUserland *userland;
+@property IBOutlet PeakWebViewContainer *peakWebView;
 @end
 
 @implementation ViewController
@@ -21,26 +24,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.peakCore  = [[PeakCore alloc] initWithTarget:self];
-
-    self.webView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:self.peakCore.webViewConfiguration];
-    self.webView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.webView.scrollView.backgroundColor = [UIColor clearColor];
-
-    self.peakCore.webView = self.webView;
-    
+    PeakCore *core = [[PeakCore alloc] init];
+    self.webView = [self.peakWebView generateWKWebViewWithPeakCore:core];
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:3000/"]]];
-    
-    [self.view addSubview:self.webView];
-    
 
+    self.userland = [core useModule:[PeakUserland class]];
+    self.userland.target = self;
 
 }
 
 - (IBAction)reloadWebView:(id)sender {
-    
+
     //    [self.webView evaluateJavaScript:@"Vue.NativeInterface.callJS('helloWorld');" completionHandler:nil];
-    
+
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://192.168.0.14:3000/"]]];
 }
 
@@ -49,12 +45,28 @@
 }
 
 
-- (IBAction)addItem:(id)sender {
+- (IBAction)clear:(id)sender {
 
-    [self.peakCore callJSFunctionName:@"setNavBarTitle" inNamespace:@"peakUserland" withPayload:@"WAS GEHT AB?" andCallback:^(id callbackPayload) {
-        NSLog(@"cb: %@", callbackPayload);
+    [self.userland callJSFunctionName:@"clear"];
+
+}
+
+- (IBAction)getCurrentResult:(id)sender {
+
+    [self.userland callJSFunctionName:@"getCurrentResult" withCallback:^(id callbackPayload) {
+        NSLog(@"Current Result: %@", callbackPayload);
     }];
 
+}
+
+-(void)storeResult:(NSNumber *)result {
+    [[NSUserDefaults standardUserDefaults] setObject:result forKey:@"result"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)getLastResultWithCallback:(PeakCoreCallback)callback {
+    NSNumber *result = [[NSUserDefaults standardUserDefaults] objectForKey:@"result"];
+    callback(result);
 }
 
 

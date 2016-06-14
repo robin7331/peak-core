@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="HO6-SR-HjP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="HO6-SR-HjP">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -8,7 +8,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -16,20 +16,35 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5U3-5R-h6K" customClass="PeakWebViewContainer">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <color key="backgroundColor" red="0.086274509799999996" green="0.58823529409999997" blue="0.22352941179999999" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="5U3-5R-h6K" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="eUV-7p-Y6T"/>
+                            <constraint firstItem="5U3-5R-h6K" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="fZH-4q-PkI"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="5U3-5R-h6K" secondAttribute="bottom" id="ie7-jN-gvd"/>
+                            <constraint firstAttribute="trailing" secondItem="5U3-5R-h6K" secondAttribute="trailing" id="oCH-LF-EJA"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="12G-g7-NPI">
-                        <barButtonItem key="leftBarButtonItem" title="Reload" id="MBc-Mz-MoF">
+                        <barButtonItem key="leftBarButtonItem" title="Clear" id="MBc-Mz-MoF">
                             <connections>
-                                <action selector="reloadWebView:" destination="BYZ-38-t0r" id="tk7-xg-Kqy"/>
+                                <action selector="clear:" destination="BYZ-38-t0r" id="qf1-Lu-IGq"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Add Item" id="ZpH-NH-QOq">
+                        <barButtonItem key="rightBarButtonItem" title="Get Current Result" id="ZpH-NH-QOq">
                             <connections>
-                                <action selector="addItem:" destination="BYZ-38-t0r" id="bjU-DO-cSh"/>
+                                <action selector="getCurrentResult:" destination="BYZ-38-t0r" id="0Qv-D1-YLg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="peakWebView" destination="5U3-5R-h6K" id="3Zf-xE-N5Y"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

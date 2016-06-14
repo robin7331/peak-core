@@ -29,7 +29,7 @@ var List = require('./components/list.vue');
 MyAPP = new Vue({
 	el: '#app',
 	data: {
-
+		currentResult: ''
 	},
 	components: {
 		'list' : List
@@ -53,16 +53,41 @@ MyAPP = new Vue({
 		// peak.info("test 123");
 		//
 		//
+		//
+		//
+		const userland = peak.modules.peakUserland // grab a reference to the userland module
+      userland.bind('clear', this.clearUI)       // 'bind' this.clearUI to the defined method definition. This method can now be called from native.
+      userland.bind('getCurrentResult', this.getCurrentResult)
 
-		peak.modules.peakUserland.bind('setNavBarTitle', this.setNavBarTitle);
+      // After binding a method, you could also access it through:
+      userland.clear()
+
+		// peak.modules.peakUserland.bind('setNavBarTitle', this.setNavBarTitle);
 
 	},
 
 
 	methods: {
-		setNavBarTitle: function(title) {
-			peak.info("setting nav bar title to " + title);
-			return "hi";
-		}
-	}
+
+	  clearUI() {
+		  this.currentResult = ''
+		  peak.info("results cleared!")     // You can always access the logger via this.peak.info or this.peak.error (or this.peak.logger)
+	  },
+	  getCurrentResult(payload, callback) {
+		  peak.info("Payload " + payload)
+		  peak.info("callback " + callback)
+		  return this.currentResult * 1;
+	  },
+	  store() {
+		  const userland = peak.modules.peakUserland;
+		  userland._callNative('storeResult', this.currentResult * 1);
+	  },
+	  retrieve() {
+		  const userland = peak.modules.peakUserland;
+		  const that = this;
+		  userland._callNative('getLastResult',  null, function(result) {
+			  that.currentResult = result;
+		  });
+	  }
+  }
 });

@@ -6,24 +6,25 @@
 #import "PeakCore.h"
 #import "MethodDefinition.h"
 #import "NativeCall.h"
-
+#import "PeakModule.h"
 
 @interface PeakCore () <WKScriptMessageHandler>
 @property NSString *namespace;
 @property NSString *name;
-@property id target;
+@property NSString *version;
 @end
 
 @implementation PeakCore {
 
 }
 
-- (instancetype)initWithTarget:(id)target {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        _target = target;
         _namespace = @"peakCore";
         _name = @"peak-core-ios";
+        _version = @"1.0.0";
+        _modules = [@{} mutableCopy];
 
         WKUserContentController *contentController = [[WKUserContentController alloc] init];
         [contentController addScriptMessageHandler:self name:@"PeakCore"];
@@ -36,6 +37,33 @@
 
     return self;
 }
+
+
+- (id)useModule:(Class)moduleClass {
+
+    NSAssert((moduleClass != nil), @"No Class given.");
+    NSAssert([moduleClass isSubclassOfClass:[PeakModule class]], @"The given module is not a subclass of <PeakModule>.");
+    NSAssert(moduleClass != [PeakModule class], @"You cannot add the PeakModule Class as a new module. Create a subclass instead!");
+
+    BOOL found = NO;
+    for( PeakModule *m in self.modules) {
+        if ([m.class isKindOfClass:moduleClass]) {
+            found = YES;
+            NSLog(@"PeakModule '%@' already installed!", m.name);
+            return m;
+        }
+    }
+
+    id module = [[moduleClass alloc] performSelector:NSSelectorFromString(@"initWithPeakCoreInstance:") withObject:self];
+    PeakModule *m = (PeakModule *)module;
+    [m onBeforeInstallation];
+
+    self.modules[m.namespace] = module;
+
+    [m onAfterInstallation];
+    return module;
+}
+
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
 
@@ -50,6 +78,15 @@
         if ([nativeCall.methodDefinition.namespace isEqualToString:self.namespace]) {
             [self handleNativeCall:nativeCall onTarget:self];
             return;
+        } else {
+            PeakModule *module = self.modules[nativeCall.methodDefinition.namespace];
+            if (module) {
+                id target = [module targetForNativeCall];
+                [self handleNativeCall:nativeCall onTarget:target];
+            } else {
+                NSString *msg = [NSString stringWithFormat:@"Module with namespace <%@> not installed!", nativeCall.methodDefinition.namespace];
+                [self logError:msg withTag:[self loggingTag]];
+            }
         }
     }
 }
@@ -108,10 +145,12 @@
     bool hasPayload = (call.methodDefinition.payloadType != MethodDefinitionPayloadTypeNone);
     bool hasCallback = (call.callbackKey != nil);
 
-    if ((hasPayload && !hasCallback) || (!hasPayload && hasCallback)) {
+    if ((hasPayload && !hasCallback)) {
         selectorString = [selectorString stringByAppendingFormat:@":"];
     } else if (hasPayload && hasCallback) {
         selectorString = [selectorString stringByAppendingFormat:@":withCallback:"];
+    } else if (!hasPayload && hasCallback) {
+        selectorString = [selectorString stringByAppendingFormat:@"WithCallback:"];
     }
 
     NSMethodSignature *methodSignature = [target methodSignatureForSelector:NSSelectorFromString(selectorString)];
@@ -150,15 +189,16 @@
     PeakCore *weakSelf = self;
     NSString *weakCallbackKey = call.callbackKey;
     PeakCoreCallback callback = ^(id callbackPayload) {
-        NSString *serializedPayload = [weakSelf serializePayload:callbackPayload];
-        NSString *callbackCall = [NSString stringWithFormat:@"window.peak.callCallback('%@', '%@');", weakCallbackKey, serializedPayload];
+        id serializedPayload = [weakSelf serializePayload:callbackPayload];
+
+        NSString *callbackCall = [NSString stringWithFormat:@"window.peak.callCallback('%@', %@);", weakCallbackKey, serializedPayload];
         [weakSelf.webView evaluateJavaScript:callbackCall completionHandler:nil];
     };
 
     return callback;
 }
 
-- (NSString *)serializePayload:(id)payload {
+- (id)serializePayload:(id)payload {
 
     if ([[payload class] isKindOfClass:[NSArray class]] || [[payload class] isKindOfClass:[NSDictionary class]]) {
         NSError *error;
@@ -173,12 +213,20 @@
             return jsonString;
         }
     } else {
+
+        if ([[payload class] isKindOfClass:[NSString class]]) {
+            return [NSString stringWithFormat:@"'%@'", payload];
+        }
         return payload;
     }
 
     return nil;
 }
 
+
+-(NSString *)loggingTag {
+    return [NSString stringWithFormat:@"%@ (%@)", self.name, self.version];
+}
 
 -(void)log:(id)message withTag:(NSString *)tag {
     [self log:[tag stringByAppendingFormat:@" %@", message]];
@@ -196,6 +244,5 @@
     NSLog(message);
 //    [[NSException exceptionWithName:message reason:@"" userInfo:nil] raise];
 }
-
 
 @end

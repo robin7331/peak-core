@@ -47,8 +47,10 @@ module.exports = config;
 module.exports = {
 	'peakCore' : [
 		{
-			name: 'enableDebug',	
-			payloadType: 'boolean',
+			name: 'enableDebug',
+			payload: {
+				type: 'boolean'
+			},
 			namespace: 'peakCore'
 		}
 	]
@@ -59,22 +61,24 @@ module.exports = {
    'peakCore' : [
       {
       	name: 'log',
-      	payloadType: 'string',
+         payload: {
+            dataType: 'string'
+         },
          namespace: 'peakCore'
       },
       {
       	name: 'logError',
-      	payloadType: 'string',
+         payload: {
+            dataType: 'string'
+         },
          namespace: 'peakCore'
       },
       {
       	name: 'onWindowLoad',
-      	payloadType: 'none',
          namespace: 'peakCore'
       },
       {
       	name: 'onVueReady',
-      	payloadType: 'none',
          namespace: 'peakCore'
       }
    ]
@@ -23163,7 +23167,7 @@ var List = require('./components/list.vue');
 MyAPP = new Vue({
 	el: '#app',
 	data: {
-
+		currentResult: ''
 	},
 	components: {
 		'list' : List
@@ -23187,18 +23191,43 @@ MyAPP = new Vue({
 		// peak.info("test 123");
 		//
 		//
+		//
+		//
+		const userland = peak.modules.peakUserland // grab a reference to the userland module
+      userland.bind('clear', this.clearUI)       // 'bind' this.clearUI to the defined method definition. This method can now be called from native.
+      userland.bind('getCurrentResult', this.getCurrentResult)
 
-		peak.modules.peakUserland.bind('setNavBarTitle', this.setNavBarTitle);
+      // After binding a method, you could also access it through:
+      userland.clear()
+
+		// peak.modules.peakUserland.bind('setNavBarTitle', this.setNavBarTitle);
 
 	},
 
 
 	methods: {
-		setNavBarTitle: function(title) {
-			peak.info("setting nav bar title to " + title);
-			return "hi";
-		}
-	}
+
+	  clearUI() {
+		  this.currentResult = ''
+		  peak.info("results cleared!")     // You can always access the logger via this.peak.info or this.peak.error (or this.peak.logger)
+	  },
+	  getCurrentResult(payload, callback) {
+		  peak.info("Payload " + payload)
+		  peak.info("callback " + callback)
+		  return this.currentResult * 1;
+	  },
+	  store() {
+		  const userland = peak.modules.peakUserland;
+		  userland._callNative('storeResult', this.currentResult * 1);
+	  },
+	  retrieve() {
+		  const userland = peak.modules.peakUserland;
+		  const that = this;
+		  userland._callNative('getLastResult',  null, function(result) {
+			  that.currentResult = result;
+		  });
+	  }
+  }
 });
 
 },{"../../../index":15,"../../../modules/peak-userland":22,"./components/list.vue":13,"./config/method-definitions":14,"jQuery":5,"vue":9,"vue-touch":8}],12:[function(require,module,exports){
@@ -23304,23 +23333,26 @@ if (module.hot) {(function () {  module.hot.accept()
 module.exports = {
    native: [
       {
-      	name: 'logTest',			//Mandatory (unchecked)
-      	payloadType: 'string'
+        name: 'storeResult',
+        payload: {
+           dataType: 'number'
+        }
       },
       {
-         name: 'callbackTest',
-         payloadType: 'number',
-         callback: {
-            callbackDataType: 'string'
-         }
+        name: 'getLastResult',
+        callback: {
+           dataType: 'number'
+        }
       }
    ],
    js: [
       {
-         name: 'setNavBarTitle',			//Mandatory (unchecked)
-         payloadType: 'string',
+         name: 'clear'
+      },
+      {
+         name: 'getCurrentResult',
          callback: {
-            callbackDataType: 'string'
+            dataType: 'number'
          }
       }
    ]
@@ -23596,11 +23628,11 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 	this.info(infoMsg);
 
 	module._info = function(msg) {
-		this.peak.info(msg,moduleName);
+		this.peak.info(msg,moduleName + "(" + packageJSON.version + ")");
 	};
 
 	module._error = function(msg) {
-		this.peak.error(msg,moduleName);
+		this.peak.error(msg,moduleName + "(" + packageJSON.version + ")");
 	};
 
 	module.name = moduleName;
@@ -23822,9 +23854,16 @@ PrivateHelpers.prototype.isModuleInstalled = function (namespace) {
  */
 PrivateHelpers.prototype.isNativeMethodPayloadValid = function(nativeMethodDefinition, payload) {
 
+   // if we don't specify a payloadType in the method definition, we set it to none manually
+   if (typeof(nativeMethodDefinition.payload) == 'undefined') {
+      nativeMethodDefinition.payload = {
+         dataType: 'none'
+      }
+   }
+
 	if (payload == null) {
-		if  (nativeMethodDefinition.payloadType != 'none') {
-			this.core.logger.error(nativeMethodDefinition.name + '(<'+ type +'>) Type mismatch. Expected <'+ nativeMethodDefinition.payloadType +'>');
+		if  (nativeMethodDefinition.payload.dataType != 'none') {
+			this.core.logger.error(nativeMethodDefinition.name + '(<'+ type +'>) Type mismatch. Expected <'+ nativeMethodDefinition.payload.dataType +'>');
 			return false;
 		}
 		return true;
@@ -23837,18 +23876,18 @@ PrivateHelpers.prototype.isNativeMethodPayloadValid = function(nativeMethodDefin
 		type = 'array';
 	}
 
-	if (type != nativeMethodDefinition.payloadType) {
-		this.core.logger.error(nativeMethodDefinition.name + '(<'+ type +'>) Type mismatch. Expected <'+ nativeMethodDefinition.payloadType +'>');
+	if (type != nativeMethodDefinition.payload.dataType) {
+		this.core.logger.error(nativeMethodDefinition.name + '(<'+ type +'>) Type mismatch. Expected <'+ nativeMethodDefinition.payload.dataType +'>');
 		return false;
 	}
 
 	//Check payloadData for objects
 	if (type == 'object'){
-		if (nativeMethodDefinition.payloadData === undefined){
+		if (nativeMethodDefinition.payload.data === undefined){
 			this.core.logger.error(nativeMethodDefinition.name + "PayloadData not declared!");
 			return false;
 		}
-		for (var key in nativeMethodDefinition.payloadData) {
+		for (var key in nativeMethodDefinition.payload.data) {
 			if ((key in payload) == false) {
 				this.core.logger.error(nativeMethodDefinition.name + "PayloadData mismatch! Expected <'" + key + "'>");
 				return false;
@@ -23881,7 +23920,7 @@ PrivateHelpers.prototype.isCallbackDataValidForMethodDefinition = function(JSMet
       return false;
    }
 
-	if (typeof(callbackDefinition.callbackData) == 'undefined' && typeof(jsonData) == 'undefined') {
+	if (typeof(callbackDefinition) == 'undefined' && typeof(jsonData) == 'undefined') {
 		return true;
 	}
 
@@ -23890,13 +23929,13 @@ PrivateHelpers.prototype.isCallbackDataValidForMethodDefinition = function(JSMet
 		type = 'array';
 	}
 
-	if (type != callbackDefinition.callbackDataType) {
-		this.core.logger.error(JSMethodDefinition.namespace + "/" + JSMethodDefinition.name + '(<'+ type +'>) callback data type mismatch. Expected <'+ callbackDefinition.callbackDataType +'>');
+	if (type != callbackDefinition.dataType) {
+		this.core.logger.error(JSMethodDefinition.namespace + "/" + JSMethodDefinition.name + '(<'+ type +'>) callback data type mismatch. Expected <'+ callbackDefinition.dataType +'>');
 		return false;
 	}
 
 	if(type == 'object'){
-		for (var key in callbackDefinition.callbackData) {
+		for (var key in callbackDefinition.data) {
 			if ((key in jsonData) == false) {
 				this.core.logger.error(JSMethodDefinition.namespace + "/" + JSMethodDefinition.name + "CallbackData mismatch! Expected <'" + key + "'>");
 				return false;

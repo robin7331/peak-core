@@ -31,8 +31,8 @@
                 if (methodDefinition != nil) {
                     _namespace = methodDefinition[@"namespace"];
                     _functionName = methodDefinition[@"name"];
-                    _payloadType = [self getPayloadTypeForMethodDefinitionPayloadType:methodDefinition[@"payloadType"]];
-                    _typeOfPayloadData = [self getTypeOfPayloadDataTypeForPayloadData:methodDefinition[@"payloadData"]];
+                    _payloadType = [self getPayloadTypeForMethodDefinition:methodDefinition[@"payload"]];
+                    _typeOfPayloadData = [self getTypeOfPayloadDataForMethodDefinition:methodDefinition[@"payload"]];
                 }
             }
         }
@@ -41,41 +41,57 @@
     return self;
 }
 
-- (MethodDefinitionPayloadType)getPayloadTypeForMethodDefinitionPayloadType:(NSString *)payloadType {
 
-    if (payloadType) {
 
-        if ([payloadType isEqualToString:@"string"])
+- (MethodDefinitionPayloadType)getPayloadTypeForMethodDefinition:(NSDictionary *)payload {
+
+    NSString *payloadType = nil;
+    if (payload && payload[@"dataType"]) {
+        payloadType = payload[@"dataType"];
+    }
+
+    return [self payloadTypeForStringType:payloadType];
+}
+
+- (NSDictionary *)getTypeOfPayloadDataForMethodDefinition:(NSDictionary *)payload {
+
+    NSDictionary *payloadData = nil;
+    if (payload && payload[@"data"]) {
+        payloadData = payload[@"data"];
+    }
+
+    NSMutableDictionary *results = [@{} mutableCopy];
+
+    if (payloadData) {
+        for (NSString* key in payloadData.allKeys) {
+            MethodDefinitionPayloadType type = [self payloadTypeForStringType:payloadData[key]];
+            results[key] = @(type);
+        }
+    }
+    return results;
+}
+
+- (MethodDefinitionPayloadType)payloadTypeForStringType:(NSString *)stringType {
+    if (stringType) {
+
+        if ([stringType isEqualToString:@"string"])
             return MethodDefinitionPayloadTypeString;
 
-        if ([payloadType isEqualToString:@"number"])
+        if ([stringType isEqualToString:@"number"])
             return MethodDefinitionPayloadTypeNumber;
 
-        if ([payloadType isEqualToString:@"object"])
+        if ([stringType isEqualToString:@"object"])
             return MethodDefinitionPayloadTypeObject;
 
-        if ([payloadType isEqualToString:@"boolean"])
+        if ([stringType isEqualToString:@"boolean"])
             return MethodDefinitionPayloadTypeBoolean;
 
-        if ([payloadType isEqualToString:@"none"])
+        if ([stringType isEqualToString:@"none"])
             return MethodDefinitionPayloadTypeNone;
 
     }
 
     return MethodDefinitionPayloadTypeNone;
-}
-
-- (NSDictionary *)getTypeOfPayloadDataTypeForPayloadData:(NSDictionary *)dict {
-
-    NSMutableDictionary *results = [@{} mutableCopy];
-
-    if (dict) {
-        for (NSString* key in dict.allKeys) {
-            MethodDefinitionPayloadType type = [self getPayloadTypeForMethodDefinitionPayloadType:dict[key]];
-            [results setObject:@(type) forKey:key];
-        }
-    }
-    return results;
 }
 
 @end

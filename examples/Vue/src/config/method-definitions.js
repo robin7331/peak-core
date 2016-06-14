@@ -1,23 +1,26 @@
 module.exports = {
    native: [
       {
-      	name: 'logTest',			//Mandatory (unchecked)
-      	payloadType: 'string'
+        name: 'storeResult',
+        payload: {
+           dataType: 'number'
+        }
       },
       {
-         name: 'callbackTest',
-         payloadType: 'number',
-         callback: {
-            callbackDataType: 'string'
-         }
+        name: 'getLastResult',
+        callback: {
+           dataType: 'number'
+        }
       }
    ],
    js: [
       {
-         name: 'setNavBarTitle',			//Mandatory (unchecked)
-         payloadType: 'string',
+         name: 'clear'
+      },
+      {
+         name: 'getCurrentResult',
          callback: {
-            callbackDataType: 'string'
+            dataType: 'number'
          }
       }
    ]

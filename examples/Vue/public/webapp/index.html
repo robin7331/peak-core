@@ -11,12 +11,17 @@
 
 <div id="app">
 
-	<list>
+	<!-- <list>
 
-	</list>
+	</list> -->
+
+	<input type="text" v-model="currentResult"></input>
+	<p>{{ currentResult }}</p>
+	<button @click="store">Store</button>
+	<button @click="retrieve">Retrieve</button>
 
 </div>
-    
+
 <script src="js/build.js"></script>
 </body>
 </html>
