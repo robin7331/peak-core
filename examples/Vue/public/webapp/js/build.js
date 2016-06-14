@@ -23564,7 +23564,7 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 
 	if (moduleNameCamelCase in this.modules) {
 		this.info("Module " + moduleName + " was installed already!");
-		return this.modules[moduleNameCamelCase];
+		return this.modules[moduleNameSpace];
 	}
 
 	if (module.nativeMethods === undefined) {
@@ -23605,7 +23605,7 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 		}
 		if (module.config.skipJSMethodValidationOnInstall == false) {
 			if (typeof(module[definition.name]) == 'undefined') {
-				this.error(definition.name + " is not implemented in module " + moduleNameCamelCase);
+				this.error(definition.name + " is not implemented in module " + moduleNameSpace);
 			}
 		}
 	}
@@ -23638,7 +23638,7 @@ Core.prototype.useModule = function(ModuleClass, customData) {
 	module.name = moduleName;
 	module.namespace = moduleNameSpace;
 
-	this.modules[moduleNameCamelCase] = module
+	this.modules[moduleNameSpace] = module
 	return module;
 }
 
@@ -23735,6 +23735,9 @@ Core.prototype.callCallback = function(callbackFunctionName, jsonData) {
 		}
 
 		callbackFunction(jsonData);
+		
+		//Free memory
+		delete nativeCallbackFunctions[callbackFunctionName];
 
 	} else {
 		this.error(callbackFunctionName + "() callback not defined!");
@@ -23776,11 +23779,7 @@ Core.prototype.callNative = function(namespace, functionName, payload, callback)
 		nativeCallbackFunctions[callbackKey] = {
 			callerNamespace: namespace,
 			callerFunctionName: functionName,
-			callbackFunction: function(data) {
-				callback(data);
-				//Free memory
-				delete nativeCallbackFunctions[callbackKey];
-			}
+			callbackFunction: callback
 		};
 	}
 
@@ -23854,6 +23853,11 @@ PrivateHelpers.prototype.isModuleInstalled = function (namespace) {
  */
 PrivateHelpers.prototype.isNativeMethodPayloadValid = function(nativeMethodDefinition, payload) {
 
+	//Do not check in production mode
+	if(!this.core.config.debug){
+		return true;
+	}
+
    // if we don't specify a payloadType in the method definition, we set it to none manually
    if (typeof(nativeMethodDefinition.payload) == 'undefined') {
       nativeMethodDefinition.payload = {
@@ -23907,6 +23911,11 @@ PrivateHelpers.prototype.isNativeMethodPayloadValid = function(nativeMethodDefin
  * @return {boolean}                  true or false
  */
 PrivateHelpers.prototype.isCallbackDataValidForMethodDefinition = function(JSMethodDefinition, jsonData) {
+	
+	//Do not check in production mode
+	if(!this.core.config.debug){
+		return true;
+	}
 
 	//Used for VUE/JS Functions without a callback
 	if(JSMethodDefinition === undefined && jsonData === undefined){
@@ -23974,24 +23983,18 @@ PrivateHelpers.prototype.execNativeCall = function(nativeMethodDefinition, paylo
 			return;
 		}
 		try{
-			//Invoke native function with callback key as String
+			//Invoke native function name
+			//Convert Objects to String
 			if(payload === null || payload === undefined) {
-				if(callbackKey === undefined){
-					PeakCore['execNative'](nativeMethodDefinition);
-				}else{
-					PeakCore['execNativeCallback'](nativeMethodDefinition, callbackKey);
-				}
-			}else{
-				//Convert Objects to String
-				if(typeof(payload) == 'object'){
-					payload = JSON.stringify(payload);
-				}
-				if(callbackKey === undefined){
-               PeakCore['execNative'](nativeMethodDefinition, payload);
-				}else{
-               PeakCore['execNativeCallback'](nativeMethodDefinition, payload, callbackKey);
-				}
+				payload = "null";
 			}
+			if(callbackKey === null || callbackKey === undefined){
+				callbackKey = "null"
+			}
+			if(typeof(payload) == 'object'){
+				payload = JSON.stringify(payload);
+			}	
+			PeakCore['invokeNativeMethod'](nativeMethodDefinition, payload, callbackKey);				
 		}catch(e){
 			console.error(nativeMethodDefinition.namespace + "/" + nativeMethodDefinition.name + "(). Android Interface method not defined.")
 		}
@@ -24003,7 +24006,7 @@ PrivateHelpers.prototype.execNativeCall = function(nativeMethodDefinition, paylo
  * @return {string} Random function name
  */
 PrivateHelpers.prototype.generateId = function() {
-   var cid = "";
+   var cid = "__peakCallback";
    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
    for( var i=0; i < 8; i++ ) {
       cid += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -24063,7 +24066,7 @@ module.exports = config;
 },{}],21:[function(require,module,exports){
 module.exports={
   "name": "@bitmechanics/peak-userland",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "peak-userland.js",
   "scripts": {
