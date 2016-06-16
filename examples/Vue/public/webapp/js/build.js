@@ -49,7 +49,7 @@ module.exports = {
 		{
 			name: 'enableDebug',
 			payload: {
-				type: 'boolean'
+				dataType: 'boolean'
 			},
 			namespace: 'peakCore'
 		}
@@ -24111,7 +24111,7 @@ module.exports = PeakModule;
 },{"./config":20,"./package.json":21}],23:[function(require,module,exports){
 module.exports={
   "name": "@bitmechanics/peak-core",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
   "main": "index.js",
   "scripts": {
