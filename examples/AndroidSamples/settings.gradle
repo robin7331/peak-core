@@ -1,6 +1,0 @@
-include ':app', ':peakcoreandroid', ':peakcacheandroid', ':peakactionsandroid', ':peakuserlandandroid'
-
-project(':peakcoreandroid').projectDir = new File(settingsDir, '../../../peak-core-android/peakcoreandroid')
-project(':peakcacheandroid').projectDir = new File(settingsDir, '../../../peak-core-android/peakcacheandroid')
-project(':peakactionsandroid').projectDir = new File(settingsDir, '../../../peak-core-android/peakactionsandroid')
-project(':peakuserlandandroid').projectDir = new File(settingsDir, '../../../peak-core-android/peakuserlandandroid')
