@@ -3,7 +3,7 @@ module.exports = {
 		{
 			name: 'enableDebug',
 			payload: {
-				type: 'boolean'
+				dataType: 'boolean'
 			},
 			namespace: 'peakCore'
 		}
