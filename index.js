@@ -1,7 +1,7 @@
 "use strict";
 
-var PeakCore = require('./lib/peak-core');
+   var PeakCore = require('./lib/peak-core');
 
-//
-// Export the PeakCore class
-module.exports = PeakCore;
+   // Export the PeakCore class
+   module.exports = PeakCore;
+}
