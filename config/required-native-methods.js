@@ -15,11 +15,7 @@ module.exports = {
          namespace: 'peakCore'
       },
       {
-      	name: 'onWindowLoad',
-         namespace: 'peakCore'
-      },
-      {
-      	name: 'onVueReady',
+      	name: 'onReady',
          namespace: 'peakCore'
       }
    ]
