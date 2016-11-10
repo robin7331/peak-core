@@ -28,6 +28,28 @@ module.exports = {
             }
          },
          namespace: 'peakCore'
+      },
+      {
+         name: 'setSharedPersistentValue',
+         payload: {
+            dataType: 'object',
+            data: {
+               key: 'string',
+               value: 'string',
+               secure: 'boolean'
+            }
+         },
+         namespace: 'peakCore'
+      },
+      {
+         name: 'getSharedStore',
+         callback: {
+            dataType: 'object',
+            data: {
+               store: 'object'
+            }
+         },
+         namespace: 'peakCore'
       }
    ]
 };
