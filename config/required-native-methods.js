@@ -17,6 +17,17 @@ module.exports = {
       {
       	name: 'onReady',
          namespace: 'peakCore'
+      },
+      {
+         name: 'setSharedValue',
+         payload: {
+            dataType: 'object',
+            data: {
+               key: 'string',
+               value: 'string'
+            }
+         },
+         namespace: 'peakCore'
       }
    ]
 };

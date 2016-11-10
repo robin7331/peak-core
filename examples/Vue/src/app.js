@@ -36,6 +36,7 @@ MyAPP = new Vue({
 	},
 	ready: function() {
 
+
 		// peak.modules.peakUserland.bind('callbackTest', 101, function(data) {
 		// 	peak.info("callback: " + data);
 		// });
