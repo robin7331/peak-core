@@ -45,9 +45,7 @@ module.exports = {
          name: 'getSharedStore',
          callback: {
             dataType: 'object',
-            data: {
-               store: 'object'
-            }
+            data: {}
          },
          namespace: 'peakCore'
       }
