@@ -13,6 +13,12 @@ config.name = "peak-core";
  */
 config.debug = true;
 
+/**
+ * If set to true all method definitions will be logged on module installation.
+ * @type {Boolean}
+ */
+config.debugMethodDefinitions = false;
+
 
 /**
  * Method definitions for native methods.
