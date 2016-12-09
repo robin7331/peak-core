@@ -13,11 +13,6 @@ config.name = "peak-core";
  */
 config.debug = true;
 
-/**
- * Used as prefix for console outputs.
- * @param {String}
- */
-config.consoleTag = config.name + " (" + pjson.version + ")";
 
 /**
  * Method definitions for native methods.
