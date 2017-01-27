@@ -17,6 +17,13 @@ module.exports = {
 				}
 			},
 			namespace: 'peakCore'
+		},
+		{
+			name: 'deleteSharedValue',
+			payload: {
+				dataType: 'string'
+			},
+			namespace: 'peakCore'
 		}
 	]
 }

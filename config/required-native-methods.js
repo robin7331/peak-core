@@ -30,12 +30,30 @@ module.exports = {
          namespace: 'peakCore'
       },
       {
+         name: 'deleteSharedValue',
+         payload: {
+            dataType: 'string'
+         },
+         namespace: 'peakCore'
+      },
+      {
          name: 'setSharedPersistentValue',
          payload: {
             dataType: 'object',
             data: {
                key: 'string',
                value: 'string',
+               secure: 'boolean'
+            }
+         },
+         namespace: 'peakCore'
+      },
+      {
+         name: 'deleteSharedPersistentValue',
+         payload: {
+            dataType: 'object',
+            data: {
+               key: 'string',
                secure: 'boolean'
             }
          },
