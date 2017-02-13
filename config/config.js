@@ -40,5 +40,10 @@ config.defaultModuleConfig = {
     generateFunctionStubs : false
 }
 
+/**
+ * Enables the Android Compatibility Mode: Using Ajax instead of JavaScriptInterface
+ */
+config.androidCompatMode = false;
+
 
 module.exports = config;
