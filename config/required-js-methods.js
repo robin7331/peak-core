@@ -24,6 +24,10 @@ module.exports = {
 				dataType: 'string'
 			},
 			namespace: 'peakCore'
+		},
+		{
+			name: 'androidQueueReady',
+			namespace: 'peakCore'
 		}
 	]
 }
