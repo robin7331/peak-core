@@ -1,11 +1,11 @@
 {
-  "name": "@bitmechanics/peak-core",
+  "name": "peak-core",
   "version": "1.1.10",
   "description": "PEAK Core is the core module that handles native <> js communications and a logging proxy.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://robin-bitmechanics@bitbucket.org/bitmechanicsgmbh/peak-core.git"
+    "url": "https://github.com/robin7331/peak-core.git"
   },
   "author": "Robin Reiter & Matthias Hermann",
   "devDependencies": {
